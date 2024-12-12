@@ -1,53 +1,44 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
-:root{
-  --main-font:"Poppins", serif;
-
+:root {
+  --main-font: "Poppins", serif;
 }
-body{
+body {
   font-family: var(--main-font);
   font-weight: 100;
   font-style: normal;
-
 }
-.line-text{
+.line-text {
   display: flex;
   align-items: center;
   text-align: center;
   width: 100%;
 }
 .line-text::before,
-.line-text::after{
+.line-text::after {
   content: "";
   flex: 1;
   border-bottom: 1px solid black;
 }
 .line-text::before {
-  margin-right: 10px; 
+  margin-right: 10px;
 }
 .line-text p {
   margin: 0;
-  padding: 0 10px; 
-  font-size: 16px; 
+  padding: 0 10px;
+  font-size: 16px;
 }
-.sideUser-img{
-  background-image: url('../public/signup2.jpeg');
+.compUser-img {
+  background-image: url("../public/signup1.jpeg");
+  background-size: cover;
+  background-position: center;
+  width: 50%;
+  height: 100vh;
+}
+.login-img {
+  background-image: url("../public/login.jpeg");
   background-size: cover;
   background-position: center;
   min-height: 100dvh;
-  width: 550px;
-}
-.compUser-img{
-  background-image: url('../public/signup1.jpeg');
-  background-size: cover;
-  background-position: center;
-  min-height: 100dvh;
-  width: 550px;
-}
-.login-img{
-  background-image: url('../public/login.jpeg');
-  background-size: cover;
-  background-position: center;
-  min-height: 100dvh;
-  width: 550px;
+  width: 50%;
 }

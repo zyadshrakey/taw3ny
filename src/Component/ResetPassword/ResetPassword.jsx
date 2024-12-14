@@ -39,7 +39,7 @@ const ResetPassword = () => {
     try {
       console.log(otp);
       // setOtp();
-      // setCurrentStep(2);
+      setCurrentStep(2);
     } catch (error) {
       console.log("Error verifying OTP:", error);
     } finally {
@@ -47,7 +47,6 @@ const ResetPassword = () => {
     }
   };
 
-  // Handle reset password with OTP
   const handleResetPassword = async () => {
     if (newPassword !== confirmPassword) {
       message.error("كلمة المرور غير متطابقة");
@@ -63,11 +62,6 @@ const ResetPassword = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const onOtpChange = (e) => {
-    console.log("otp", e);
-    setOtp(e);
   };
 
   const getImageForStep = () => {
@@ -137,9 +131,9 @@ const ResetPassword = () => {
                   label="الكود المرسل"
                   rules={[{ required: true, message: "الرجاء إدخال الكود" }]}
                 >
-                  <Input.OTP
+                  <Input
                     value={otp}
-                    onChange={onOtpChange}
+                    onChange={(e) => setOtp(e.target.value)}
                     className="form-control"
                   />
                 </Form.Item>

@@ -30,16 +30,11 @@ export const confirmResetPassword = async (
   try {
     const response = await axios.post(
       `${baseUrl}/Auth/confirm-reset-password`,
-      JSON.stringify({
+      {
         email,
         otp,
         newPassword,
         confirmPassword,
-      }),
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
       }
     );
     return response;

@@ -42,12 +42,12 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/opportunities">
+              <Link className="nav-link" to="/requestes">
                 طلبات التطوع
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/requestes">
+              <Link className="nav-link" to="/opportunities">
                 فرص التطوع
               </Link>
             </li>
@@ -58,7 +58,6 @@ const Navbar = () => {
             </li>
           </ul>
 
-          {/* Logout Button */}
           <button
             className="btn fw-bold"
             style={{

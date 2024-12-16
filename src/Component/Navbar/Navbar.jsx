@@ -17,7 +17,6 @@ const Navbar = () => {
       }}
     >
       <div className="container-fluid">
-        {/* Logo Section */}
         <Link className="navbar-brand d-flex align-items-center" to="/">
           <img src={logo} alt="Logo" className="p-4" style={{ width: "90%" }} />
         </Link>

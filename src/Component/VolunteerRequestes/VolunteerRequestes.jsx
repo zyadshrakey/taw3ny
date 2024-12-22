@@ -1,108 +1,131 @@
-import { useEffect, useState } from "react";
-import {
-  getCharityApplications,
-  acceptApplication,
-  rejectApplication,
-} from "../../Apis/requestes";
-import { Interceptor } from "../../Apis/interceptor";
-import { Card, Button, Spin, message, Row, Col, Avatar } from "antd";
-import { PhoneOutlined } from "@ant-design/icons";
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import Requests from '../Requests/Requests';
 
-function VolunteerRequestes() {
-  const [volunteerData, setVolunteerData] = useState([]);
-  const [loading, setLoading] = useState(false);
+function VolunteerRequestes({userData}) {
 
-  const getRequestes = async () => {
-    setLoading(true);
-    try {
-      const { data } = await getCharityApplications();
-      setVolunteerData(data.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
+  const [requestsData, setRequestsData] = useState([]);
+  const [loading, setLoading] = useState(false)
+  const [ error, setError] = useState(null)
+
+  async function volunteerRequestApi(){
+    try{
+      const token= localStorage.getItem('userToken')
+      if(!token){
+        console.error('No token found in localStorage')
+        setError('No Token Found')
+        setLoading(false)
+        return;
+      }
+    setLoading(true)
+    
+    let {data}= await axios.get(`https://wezaa.runasp.net/VolunteerApplications`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    console.log(data.data)
+
+    if (data && data.data) {
+      setRequestsData(data.data);
+    } else {
+      setError('No data found.');
     }
-  };
+   }
+    catch(error){
+      console.log(error)
+      setError('Failed to load requests.');
+    }
+    finally{
+      setLoading(false)
+    }
+  }
+
+  const acceptedBack= async(id)=>{
+    const token= localStorage.getItem('userToken')
+    if (!token) {
+      throw new Error('No token found in localStorage');
+    }
+    try{
+      await axios.put(`https://wezaa.runasp.net/VolunteerApplications/accept/${id}`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    }
+    catch(error){
+      throw new Error('Failed to accept the request');
+    }
+
+
+  }
+
+
+  const rejectBack= async(id)=>{
+    const token= localStorage.getItem('userToken')
+    if (!token) {
+      throw new Error('No token found in localStorage');
+    }
+    try{
+      await axios.put(`https://wezaa.runasp.net/VolunteerApplications/reject/${id}`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    }
+    catch(error){
+      throw new Error('Failed to accept the request');
+    }
+
+
+  }
 
   const handleAccept = async (id) => {
     try {
-      await acceptApplication(id);
-      message.success("تمت الموافقة على الطلب");
-      getRequestes();
+      await acceptedBack(id);  
+      alert('تمت الموافقة على الطلب'); 
+      volunteerRequestApi(); 
     } catch (error) {
       console.error(error);
-      message.error("حدث خطأ أثناء الموافقة");
+      alert('حدث خطأ أثناء الموافقة'); 
     }
   };
 
   const handleReject = async (id) => {
     try {
-      await rejectApplication(id);
-      message.success("تم رفض الطلب");
-      getRequestes();
+      await rejectBack(id); 
+      alert('تم رفض الطلب'); 
+      volunteerRequestApi();
     } catch (error) {
       console.error(error);
-      message.error("حدث خطأ أثناء الرفض");
+      alert('حدث خطأ أثناء الرفض'); 
     }
   };
 
-  useEffect(() => {
-    Interceptor();
-    getRequestes();
-  }, []);
+  useEffect(()=>{
+    volunteerRequestApi()
 
-  return (
-    <div className="container mt-5" dir="rtl">
-      <h1 className="mb-4 fw-bold">طلبات التطوع</h1>
-      {loading ? (
-        <div className="d-flex justify-content-center align-items-center">
-          <Spin size="large" />
-        </div>
-      ) : (
-        <Row gutter={[16, 16]}>
-          {volunteerData.map(
-            ({ id, volunteerName, volunteerPhone, opportunityName }) => (
-              <Col xs={24} sm={12} md={8} lg={6} key={id}>
-                <Card
-                  className="text-center shadow-sm"
-                  cover={
-                    <Avatar
-                      // src={profileImage}
-                      size={100}
-                      className="mt-3 mx-auto"
-                    />
-                  }
-                >
-                  <h3 className="mt-3 mb-1">{volunteerName}</h3>
-                  <h5 className="mb-1">{opportunityName}</h5>
-                  <p className="mb-1 d-flex align-items-center justify-content-center">
-                    <PhoneOutlined />
-                    {volunteerPhone}
-                  </p>
-                  <div className="d-flex justify-content-around mt-3">
-                    <Button
-                      type="primary"
-                      onClick={() => handleAccept(id)}
-                      className="px-4"
-                    >
-                      قبول
-                    </Button>
-                    <Button
-                      danger
-                      onClick={() => handleReject(id)}
-                      className="px-4"
-                    >
-                      رفض
-                    </Button>
-                  </div>
-                </Card>
-              </Col>
-            )
-          )}
-        </Row>
-      )}
+  },[])
+
+  
+  
+ return(
+  <div className='container'>
+    <div className="title" dir='rtl'>
+      <h1 className='py-2' style={{fontWeight:'400', fontSize:'40px', lineHeight:'56px'}}>طلبات التطوع</h1>
     </div>
-  );
+    {loading?
+    (<div className='d-flex justify-content-center align-items center'>
+      <i style={{color:'#214D97', fontSize:'25px'}} className="fa-solid fa-spinner"></i>
+    </div>)
+    
+  :''}
+      <div className='row py-5'>
+        {requestsData.map((item,index)=><Requests item={item} key={index} onAccept={handleAccept} onReject={handleReject}/>)}
+      </div>
+  </div>
+ )
 }
 
-export default VolunteerRequestes;
+export default VolunteerRequestes

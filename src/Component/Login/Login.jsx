@@ -3,7 +3,7 @@ import Joi from "joi";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-function Login() {
+function Login({saveUserData}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   let navigate = useNavigate();
@@ -29,6 +29,7 @@ function Login() {
       console.log(data);
       if (!data.error) {
         localStorage.setItem("userToken", data.token);
+        saveUserData()
         console.log(data.message);
         navigate("/");
         setLoading(false);
@@ -80,7 +81,7 @@ function Login() {
     <>
       <div className="d-flex w-100 flex-md-row flex-column justify-content-between">
         <div
-          className="flex-column p-4 w-50"
+          className="flex-column p-4 w-100"
           style={{ textAlign: "center", margin: "auto" }}
         >
           {error.length > 0 ? (
@@ -194,7 +195,7 @@ function Login() {
             </Link>
           </p>
         </div>
-        <div className="login-img">
+        <div className="login-img w-100">
           {/* <img src={`/login.jpeg`} alt="login" style={{height:'100vh', width:'550px'}} /> */}
         </div>
       </div>

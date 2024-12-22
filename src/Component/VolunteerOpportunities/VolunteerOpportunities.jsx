@@ -113,6 +113,7 @@ const VolunteerOpportunities = () => {
     } catch (error) {
       message.error("فشل في الحفظ");
     }
+    
   };
 
   const handleImageUpload = ({ file }) => {
@@ -124,7 +125,8 @@ const VolunteerOpportunities = () => {
   return (
     <div className="container mx-auto mt-4">
       <div className="d-flex align-items-center justify-content-between mb-4">
-        <ActionButton label="إضافة فرصة" onClick={() => openModal()} />
+          <div className="btn"><button className="p-3" style={{backgroundColor:'#214D97', color:'#F5F5F5', border:'none', borderRadius:'8px'}} onClick={()=>openModal()}>إضافة فرصة <i class="fa-regular fa-square-plus"></i></button></div>
+          
         <h2 className="text-2xl font-bold mb-4">فرص التطوع</h2>
       </div>
 
@@ -135,15 +137,15 @@ const VolunteerOpportunities = () => {
           {opportunities.map((opportunity) => (
             <div
               key={opportunity.id}
-              className="col shadow-lg d-flex flex-column"
+              className="col  d-flex flex-column"
             >
-              <div className="card h-100">
+              <div className="card h-100 px-2" style={{border:'none' ,backgroundColor:'#F5F5F5', borderRadius:'24px'}}>
                 {opportunity.pictureUrl && (
                   <img
                     src={opportunity.pictureUrl}
                     alt={opportunity.title}
                     className="card-img-top"
-                    style={{ height: "200px", objectFit: "cover" }}
+                    style={{ height: "200px", objectFit: "cover", boxSizing:'content-box', borderRadius:'50%' }}
                   />
                 )}
 
@@ -163,7 +165,7 @@ const VolunteerOpportunities = () => {
                     {opportunity.description || "لا يوجد وصف متاح"}
                   </p>
 
-                  <div className="d-flex justify-content-between text-sm text-muted mb-4">
+                  <div className="d-flex flex-column align-items-center justify-content-between text-sm text-dark mb-4">
                     <span>{opportunity.location}</span>
                     <span>{opportunity.category}</span>
                     <span>{opportunity.maxVolunteers} متطوع</span>
@@ -173,12 +175,14 @@ const VolunteerOpportunities = () => {
                     <button
                       className="btn btn-primary"
                       onClick={() => openModal(opportunity)}
+                      style={{backgroundColor:'#214D97'}}
                     >
                       تعديل
                     </button>
                     <button
-                      className="btn btn-danger"
+                      className="btn"
                       onClick={() => deleteOpportunity(opportunity.id)}
+                      style={{border:'1px solid #972121', color:'#972121', fontSize:'20px'}}
                     >
                       حذف
                     </button>
@@ -199,7 +203,7 @@ const VolunteerOpportunities = () => {
         <Form form={form} layout="vertical" onFinish={handleSave}>
           <Form.Item
             name="title"
-            label="العنوان"
+            label="المحافظة"
             rules={[{ required: true, message: "الرجاء إدخال العنوان" }]}
           >
             <Input />

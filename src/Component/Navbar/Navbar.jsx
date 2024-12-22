@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/Logo.png";
 
+
+
 const Navbar = () => {
   function handleLogout() {
     localStorage.clear();
@@ -11,7 +13,7 @@ const Navbar = () => {
     <nav
       className="navbar navbar-expand-lg navbar-light bg-white shadow-sm"
       style={{
-        borderBottom: "1px solid #ddd",
+        borderBottom: "1px solid rgba(33, 77, 151, 1)",
         borderRadius: "0 0 10px 20px",
         height: "80px",
       }}
@@ -35,22 +37,24 @@ const Navbar = () => {
 
         <div className="collapse navbar-collapse" id="navbarContent">
           <ul className="navbar-nav mx-auto mb-2 mb-lg-0 fs-5 fw-bold">
-            <li className="nav-item">
-              <Link className="nav-link" to="/">
-                المتطوعين
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/requestes">
-                طلبات التطوع
-              </Link>
-            </li>
-            <li className="nav-item">
+            
+            
+            <li style={{fontWeight:'400', fontSize:'18px'}} className="nav-item">
               <Link className="nav-link" to="/opportunities">
                 فرص التطوع
               </Link>
             </li>
-            <li className="nav-item">
+            <li style={{fontWeight:'400', fontSize:'18px'}} className="nav-item">
+              <Link className="nav-link" to="/Volunteer">
+                المتطوعين
+              </Link>
+            </li>
+            <li style={{fontWeight:'400', fontSize:'18px'}} className="nav-item">
+              <Link className="nav-link" to="/requestes">
+                طلبات التطوع
+              </Link>
+            </li>
+            <li style={{fontWeight:'400', fontSize:'18px'}} className="nav-item">
               <Link className="nav-link" to="/profile">
                 ملف المؤسسة
               </Link>
@@ -64,6 +68,7 @@ const Navbar = () => {
               height: "40px",
               backgroundColor: "#214D97",
               color: "#fff",
+              borderRadius:'8px'
             }}
             onClick={handleLogout}
           >
@@ -72,6 +77,8 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
+
+
   );
 };
 

@@ -365,12 +365,8 @@ function CompanyRegister() {
             </Link>
           </p>
         </div>
-        <div className="compUser-img w-50">
-          {/* <img
-            src={"companyImg"}
-            alt="login"
-            style={{ min_height: "100vh", width: "550px" }}
-          /> */}
+        <div className="compUser-img ">
+         
         </div>
       </div>
     </>

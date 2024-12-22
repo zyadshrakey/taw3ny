@@ -3,7 +3,18 @@ import axios from "axios";
 const baseUrl = "https://wezaa.runasp.net";
 
 export const createOpportunity = async (opportunity) => {
-  const response = await axios.post(`${baseUrl}/Opportunities`, opportunity);
+  const formData = new FormData();
+
+  Object.entries(opportunity).forEach(([key, value]) => {
+    formData.append(key, value);
+  });
+
+  const response = await axios.post(`${baseUrl}/Opportunities`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
   return response;
 };
 
@@ -18,9 +29,17 @@ export const deleteOpportunity = async (id) => {
 };
 
 export const updateOpportunity = async (id, opportunity) => {
-  const response = await axios.put(
-    `${baseUrl}/Opportunities/${id}`,
-    opportunity
-  );
+  const formData = new FormData();
+
+  Object.entries(opportunity).forEach(([key, value]) => {
+    formData.append(key, value);
+  });
+
+  const response = await axios.put(`${baseUrl}/Opportunities/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
   return response;
 };

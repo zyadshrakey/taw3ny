@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Form, Input, message, DatePicker, Upload, Spin } from "antd";
+import { Modal, Form, Input, message, Upload, Select } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
 import {
@@ -9,24 +9,7 @@ import {
   updateOpportunity,
 } from "../../Apis/opportunities";
 import { Interceptor } from "../../Apis/interceptor";
-
-const { RangePicker } = DatePicker;
-
-const ActionButton = ({ label, onClick, style }) => (
-  <button
-    className="btn fw-bold"
-    style={{
-      padding: "0 20px",
-      height: "40px",
-      backgroundColor: "#214D97",
-      color: "#fff",
-      ...style,
-    }}
-    onClick={onClick}
-  >
-    {label}
-  </button>
-);
+import avatar from "../../assets/volunteer-services-bureau logo@2x.png";
 
 const ImageUploader = ({ onUpload, previewImage }) => (
   <div>
@@ -35,20 +18,10 @@ const ImageUploader = ({ onUpload, previewImage }) => (
       showUploadList={false}
       onChange={onUpload}
     >
-      <button
-        type="button"
-        className="bg-blue-500 text-white px-3 py-1 rounded"
-      >
+      <button type="button" className="bg-blue-500 px-3 py-1 rounded">
         <PlusOutlined /> تحميل
       </button>
     </Upload>
-    {previewImage && (
-      <img
-        src={previewImage}
-        alt="Uploaded Preview"
-        className="mt-2 w-full h-40 object-cover rounded"
-      />
-    )}
   </div>
 );
 
@@ -58,12 +31,14 @@ const VolunteerOpportunities = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingOpportunity, setEditingOpportunity] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [imageError, setImageError] = useState(false);
   const [form] = Form.useForm();
 
   const fetchOpportunities = async () => {
     setLoading(true);
     try {
       const response = await getOpportunities();
+      console.log(response);
       setOpportunities(response.data.data);
     } catch (error) {
       message.error("فشل في تحميل البيانات");
@@ -83,8 +58,14 @@ const VolunteerOpportunities = () => {
     form.resetFields();
     if (opportunity) {
       form.setFieldsValue({
-        ...opportunity,
-        duration: [moment(opportunity.startDate), moment(opportunity.endDate)],
+        title: opportunity.title,
+        location: opportunity.location,
+        startDate: moment(opportunity.startDate),
+        endDate: moment(opportunity.endDate),
+        totalHours: opportunity.totalHours,
+        maxVolunteers: opportunity.maxVolunteers,
+        category: opportunity.category,
+        description: opportunity.description,
       });
     }
     setIsModalVisible(true);
@@ -92,19 +73,11 @@ const VolunteerOpportunities = () => {
 
   const handleSave = async (values) => {
     try {
-      const { duration, ...restValues } = values;
-      const dataToSend = {
-        ...restValues,
-        startDate: duration[0].format("YYYY-MM-DD"),
-        endDate: duration[1].format("YYYY-MM-DD"),
-        pictureUrl: imagePreview,
-      };
-
       if (editingOpportunity) {
-        await updateOpportunity(editingOpportunity.id, dataToSend);
+        await updateOpportunity(editingOpportunity.id, values);
         message.success("تم التحديث بنجاح");
       } else {
-        await createOpportunity(dataToSend);
+        await createOpportunity(values);
         message.success("تمت الإضافة بنجاح");
       }
 
@@ -113,7 +86,6 @@ const VolunteerOpportunities = () => {
     } catch (error) {
       message.error("فشل في الحفظ");
     }
-    
   };
 
   const handleImageUpload = ({ file }) => {
@@ -122,11 +94,34 @@ const VolunteerOpportunities = () => {
     reader.readAsDataURL(file);
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await deleteOpportunity(id);
+      message.success("تم الحذف بنجاح");
+      fetchOpportunities();
+    } catch (error) {
+      message.error("فشل في الحذف");
+    }
+  };
+
   return (
     <div className="container mx-auto mt-4">
       <div className="d-flex align-items-center justify-content-between mb-4">
-          <div className="btn"><button className="p-3" style={{backgroundColor:'#214D97', color:'#F5F5F5', border:'none', borderRadius:'8px'}} onClick={()=>openModal()}>إضافة فرصة <i class="fa-regular fa-square-plus"></i></button></div>
-          
+        <div className="btn">
+          <button
+            className="p-3"
+            style={{
+              backgroundColor: "#214D97",
+              color: "#F5F5F5",
+              border: "none",
+              borderRadius: "8px",
+            }}
+            onClick={() => openModal()}
+          >
+            إضافة فرصة <i className="fa-regular fa-square-plus"></i>
+          </button>
+        </div>
+
         <h2 className="text-2xl font-bold mb-4">فرص التطوع</h2>
       </div>
 
@@ -135,17 +130,26 @@ const VolunteerOpportunities = () => {
       ) : (
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mt-4">
           {opportunities.map((opportunity) => (
-            <div
-              key={opportunity.id}
-              className="col  d-flex flex-column"
-            >
-              <div className="card h-100 px-2" style={{border:'none' ,backgroundColor:'#F5F5F5', borderRadius:'24px'}}>
+            <div key={opportunity.id} className="col  d-flex flex-column">
+              <div
+                className="card h-100 px-2"
+                style={{
+                  border: "none",
+                  backgroundColor: "#F5F5F5",
+                  borderRadius: "24px",
+                }}
+              >
                 {opportunity.pictureUrl && (
                   <img
                     src={opportunity.pictureUrl}
                     alt={opportunity.title}
                     className="card-img-top"
-                    style={{ height: "200px", objectFit: "cover", boxSizing:'content-box', borderRadius:'50%' }}
+                    style={{
+                      height: "200px",
+                      objectFit: "cover",
+                      boxSizing: "content-box",
+                      borderRadius: "50%",
+                    }}
                   />
                 )}
 
@@ -175,14 +179,18 @@ const VolunteerOpportunities = () => {
                     <button
                       className="btn btn-primary"
                       onClick={() => openModal(opportunity)}
-                      style={{backgroundColor:'#214D97'}}
+                      style={{ backgroundColor: "#214D97" }}
                     >
                       تعديل
                     </button>
                     <button
                       className="btn"
-                      onClick={() => deleteOpportunity(opportunity.id)}
-                      style={{border:'1px solid #972121', color:'#972121', fontSize:'20px'}}
+                      onClick={() => handleDelete(opportunity.id)}
+                      style={{
+                        border: "1px solid #972121",
+                        color: "#972121",
+                        fontSize: "20px",
+                      }}
                     >
                       حذف
                     </button>
@@ -199,6 +207,8 @@ const VolunteerOpportunities = () => {
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         onOk={() => form.submit()}
+        okText="حفظ"
+        cancelText="اغلاق"
       >
         <Form form={form} layout="vertical" onFinish={handleSave}>
           <Form.Item
@@ -209,48 +219,108 @@ const VolunteerOpportunities = () => {
             <Input />
           </Form.Item>
 
-          <Form.Item
-            name="location"
-            label="الموقع"
-            rules={[{ required: true, message: "الرجاء إدخال الموقع" }]}
-          >
-            <Input />
-          </Form.Item>
+          <div className="row">
+            <div className="col-md-12 mb-3">
+              <Form.Item
+                name="location"
+                label="الموقع"
+                rules={[{ required: true, message: "الرجاء إدخال الموقع" }]}
+              >
+                <Input className="form-control" />
+              </Form.Item>
+            </div>
+          </div>
 
-          <Form.Item
-            name="duration"
-            label="مدة الفرصة"
-            rules={[{ required: true, message: "الرجاء اختيار المدة" }]}
-          >
-            <RangePicker format="YYYY-MM-DD" />
-          </Form.Item>
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <Form.Item
+                name="startDate"
+                label="تاريخ البداية"
+                rules={[
+                  { required: true, message: "الرجاء إدخال تاريخ البداية" },
+                ]}
+              >
+                <Input type="date" className="form-control" />
+              </Form.Item>
+            </div>
+            <div className="col-md-6 mb-3">
+              <Form.Item
+                name="endDate"
+                label="تاريخ النهاية"
+                rules={[
+                  { required: true, message: "الرجاء إدخال تاريخ النهاية" },
+                ]}
+              >
+                <Input type="date" className="form-control" />
+              </Form.Item>
+            </div>
+          </div>
 
-          <Form.Item
-            name="maxVolunteers"
-            label="عدد المتطوعين المطلوب"
-            rules={[{ required: true, message: "الرجاء إدخال العدد المطلوب" }]}
-          >
-            <Input type="number" />
-          </Form.Item>
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <Form.Item
+                name="totalHours"
+                label="عدد الساعات المطلوبة"
+                rules={[
+                  { required: true, message: "الرجاء إدخال العدد المطلوب" },
+                ]}
+              >
+                <Input type="number" className="form-control" />
+              </Form.Item>
+            </div>
+            <div className="col-md-6 mb-3">
+              <Form.Item
+                name="maxVolunteers"
+                label="عدد المتطوعين المطلوب"
+                rules={[
+                  { required: true, message: "الرجاء إدخال العدد المطلوب" },
+                ]}
+              >
+                <Input type="number" className="form-control" />
+              </Form.Item>
+            </div>
+          </div>
 
-          <Form.Item
-            name="category"
-            label="الفئة"
-            rules={[{ required: true, message: "الرجاء إدخال الفئة" }]}
-          >
-            <Input />
-          </Form.Item>
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <Form.Item
+                name="category"
+                label="الفئة"
+                rules={[{ required: true, message: "الرجاء اختيار الفئة" }]}
+              >
+                <Select placeholder="اختر الفئة">
+                  {[
+                    { id: 0, name: "Education" },
+                    { id: 1, name: "Health" },
+                    { id: 2, name: "Relief" },
+                    { id: 3, name: "Environment" },
+                    { id: 4, name: "CommunityDevelopment" },
+                    { id: 5, name: "ArtsAndCulture" },
+                  ].map((category) => (
+                    <Select.Option key={category.id} value={category.name}>
+                      {category.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </div>
+            <div className="col-6 mb-3">
+              <Form.Item name="OpportunityPicture" label="تحميل الصورة">
+                <ImageUploader
+                  onUpload={handleImageUpload}
+                  previewImage={imagePreview}
+                />
+              </Form.Item>
+            </div>
+          </div>
 
-          <Form.Item name="description" label="الوصف">
-            <Input.TextArea rows={3} />
-          </Form.Item>
-
-          <Form.Item label="تحميل الصورة">
-            <ImageUploader
-              onUpload={handleImageUpload}
-              previewImage={imagePreview}
-            />
-          </Form.Item>
+          <div className="row">
+            <div className="col-12 mb-3">
+              <Form.Item name="description" label="الوصف">
+                <Input.TextArea rows={3} className="form-control" />
+              </Form.Item>
+            </div>
+          </div>
         </Form>
       </Modal>
     </div>

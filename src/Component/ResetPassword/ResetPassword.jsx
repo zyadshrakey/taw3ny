@@ -21,17 +21,16 @@ const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
-  const navigate= useNavigate()
+  const navigate = useNavigate();
 
-  const handlegoBack=()=>{
-    navigate(-1)
-  }
+  const handlegoBack = () => {
+    navigate(-1);
+  };
 
-  const handleRequestOtp = async (values) => {
-    // e.preventDefault()
+  const handleRequestOtp = async () => {
     setLoading(true);
     try {
-      await requestOtp(values.email);
+      await requestOtp(email);
       setCurrentStep(1);
     } catch (error) {
       console.log("Error requesting OTP:", error);
@@ -44,7 +43,6 @@ const ResetPassword = () => {
     setLoading(true);
     try {
       console.log(otp);
-      // setOtp();
       setCurrentStep(2);
     } catch (error) {
       console.log("Error verifying OTP:", error);
@@ -54,8 +52,8 @@ const ResetPassword = () => {
   };
 
   const handleResetPassword = async () => {
-    if (newPassword !== confirmPassword) {
-      message.error("كلمة المرور غير متطابقة");
+    if (newPassword !== confirmPassword || newPassword === "") {
+      message.error("كلمه المرور غير صحيحه");
       return;
     }
     setLoading(true);
@@ -84,48 +82,65 @@ const ResetPassword = () => {
   };
 
   return (
-
-
     <div className="d-flex w-100 h-100 flex-md-row flex-column justify-content-center">
       <div className="row w-100 h-100">
         <div className="col-md-6 h-100 px-5 d-flex justify-content-center">
           <div>
             <ConfigProvider theme={Theme}>
-              <Steps current={currentStep} style={{visibility:'hidden'}} className="mb-5">
+              <Steps
+                current={currentStep}
+                style={{ visibility: "hidden" }}
+                className="mb-5"
+              >
                 <Step title="طلب الكود" />
                 <Step title="التحقق من الكود" />
                 <Step title="إعادة تعيين كلمة المرور" />
               </Steps>
             </ConfigProvider>
 
-            <div className="d-flex align-items-start mb-5 back" >
-              <button className="btn" style={{color:'rgba(33, 77, 151, 1)', border:'2px solid rgba(33, 77, 151, 1)',borderRadius:'8px', textAlign:'center'}} onClick={handlegoBack}>
-              <i class="fa-solid fa-chevron-left"></i> رجوع
+            <div className="d-flex align-items-start mb-5 back">
+              <button
+                className="btn"
+                style={{
+                  color: "rgba(33, 77, 151, 1)",
+                  border: "2px solid rgba(33, 77, 151, 1)",
+                  borderRadius: "8px",
+                  textAlign: "center",
+                }}
+                onClick={handlegoBack}
+              >
+                <i class="fa-solid fa-chevron-left"></i> رجوع
               </button>
-              
             </div>
 
             <div className="d-flex flex-column gap-2 w-80 mb-5 justify-content-center align-items-center">
-                <div>
-                <h1 
-              style={{fontWeight:'400',
-                fontSize:'40px',
-                lineHeight:'56px',
-                textAlign:'center'
-              }}>استعادة كلمة المرور ؟</h1>
-                </div>
               <div>
-              <p
-              style={{
-                fontWeight:'200',
-                fontSize:'20px',
-                lineHeight:'28px',
-                alignItems:'center'
-              }}>يرجى إدخال بريدك الإلكتروني سنرسل لك رابطًا لإعادة تعيين كلمة المرور.</p>
+                <h1
+                  style={{
+                    fontWeight: "400",
+                    fontSize: "40px",
+                    lineHeight: "56px",
+                    textAlign: "center",
+                  }}
+                >
+                  استعادة كلمة المرور ؟
+                </h1>
               </div>
-            
+              <div>
+                <p
+                  style={{
+                    fontWeight: "200",
+                    fontSize: "20px",
+                    lineHeight: "28px",
+                    alignItems: "center",
+                  }}
+                >
+                  يرجى إدخال بريدك الإلكتروني سنرسل لك رابطًا لإعادة تعيين كلمة
+                  المرور.
+                </p>
+              </div>
             </div>
-           
+
             {currentStep === 0 && (
               <Form onFinish={handleRequestOtp} layout="vertical">
                 <Form.Item
@@ -142,7 +157,7 @@ const ResetPassword = () => {
                     },
                   ]}
                 >
-               <Input
+                  <Input
                     placeholder="البريد الإلكترونى"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -154,31 +169,28 @@ const ResetPassword = () => {
                       width: "503px",
                       borderRadius: "16px",
                     }}
-                     dir="rtl"
+                    dir="rtl"
                   />
-                 
                 </Form.Item>
                 <Button
                   type="primary"
                   htmlType="submit"
                   className="btn w-100 mt-2"
-              style={{
-                backgroundColor: "#214D97",
-                color: "white",
-                borderRadius: "24px",
-                height: "48px",
-              }}
+                  style={{
+                    backgroundColor: "#214D97",
+                    color: "white",
+                    borderRadius: "24px",
+                    height: "48px",
+                  }}
                   loading={loading}
                 >
-                  إرسال 
+                  إرسال
                 </Button>
               </Form>
             )}
 
-
             {currentStep === 1 && (
-              
-              <Form layout="vertical">
+              <Form layout="vertical" onFinish={handleVerifyOtp}>
                 <Form.Item
                   name="otp"
                   label="الكود المرسل"
@@ -199,7 +211,7 @@ const ResetPassword = () => {
                 </Form.Item>
                 <Button
                   type="primary"
-                  onClick={handleVerifyOtp}
+                  htmlType="submit"
                   className="w-100 btn"
                   style={{
                     backgroundColor: "#214D97",
@@ -207,7 +219,6 @@ const ResetPassword = () => {
                     borderRadius: "24px",
                     height: "48px",
                   }}
-
                   loading={loading}
                 >
                   تحقق من الكود
@@ -216,7 +227,7 @@ const ResetPassword = () => {
             )}
 
             {currentStep === 2 && (
-              <Form layout="vertical">
+              <Form layout="vertical" onFinish={handleResetPassword}>
                 <Form.Item
                   name="newPassword"
                   label="كلمة المرور الجديدة"
@@ -224,6 +235,10 @@ const ResetPassword = () => {
                     {
                       required: true,
                       message: "الرجاء إدخال كلمة المرور الجديدة",
+                    },
+                    {
+                      min: 6,
+                      message: "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
                     },
                   ]}
                 >
@@ -237,8 +252,22 @@ const ResetPassword = () => {
                 <Form.Item
                   name="confirmPassword"
                   label="تأكيد كلمة المرور"
+                  dependencies={["newPassword"]}
                   rules={[
-                    { required: true, message: "الرجاء تأكيد كلمة المرور" },
+                    {
+                      required: true,
+                      message: "الرجاء تأكيد كلمة المرور",
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue("newPassword") === value) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(
+                          new Error("كلمتا المرور غير متطابقتين")
+                        );
+                      },
+                    }),
                   ]}
                 >
                   <Input.Password
@@ -250,7 +279,7 @@ const ResetPassword = () => {
                 </Form.Item>
                 <Button
                   type="primary"
-                  onClick={handleResetPassword}
+                  htmlType="submit"
                   className="w-100 btn"
                   style={{ backgroundColor: "#214D97", color: "white" }}
                   loading={loading}
@@ -266,7 +295,7 @@ const ResetPassword = () => {
                 <Link to="/login">
                   <Button
                     type="primary"
-                    className="btn"
+                    className="btn py-2 px-4 d-flex align-items-center"
                     style={{ backgroundColor: "#214D97", color: "white" }}
                   >
                     العودة إلى صفحة تسجيل الدخول

@@ -58,14 +58,14 @@ const VolunteerOpportunities = () => {
 
   const openModal = (opportunity = null) => {
     setEditingOpportunity(opportunity);
-    setImagePreview(opportunity?.pictureUrl || avatar);
+    setImagePreview(opportunity?.pictureUrl);
     form.resetFields();
     if (opportunity) {
       form.setFieldsValue({
         title: opportunity.title,
         location: opportunity.location,
-        startDate: opportunity.startDate ? moment(opportunity.startDate) : null,
-        endDate: opportunity.endDate ? moment(opportunity.endDate) : null,
+        startDate: opportunity.startDate,
+        endDate: opportunity.endDate,
         totalHours: opportunity.totalHours,
         maxVolunteers: opportunity.maxVolunteers,
         category: opportunity.category,
@@ -79,15 +79,18 @@ const VolunteerOpportunities = () => {
     try {
       const finalValues = {
         ...values,
-        pictureUrl: imagePreview ? imagePreview : avatar,
+        pictureUrl: imagePreview,
         Requirements: "shrakey and 5 others",
       };
 
       if (editingOpportunity) {
         await updateOpportunity(editingOpportunity.id, finalValues);
+
         message.success("تم التحديث بنجاح");
       } else {
         await createOpportunity(finalValues);
+        console.log(finalValues);
+
         message.success("تمت الإضافة بنجاح");
       }
 
@@ -146,19 +149,16 @@ const VolunteerOpportunities = () => {
                 borderRadius: "24px",
               }}
             >
-              {opportunity.pictureUrl && (
-                <img
-                  src={opportunity.pictureUrl}
-                  alt={opportunity.title}
-                  className="card-img-top"
-                  style={{
-                    height: "200px",
-                    objectFit: "cover",
-                    boxSizing: "content-box",
-                    borderRadius: "50%",
-                  }}
-                />
-              )}
+              <img
+                src={opportunity.pictureUrl || avatar}
+                alt={opportunity.title}
+                className="card-img-top"
+                style={{
+                  height: 200,
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                }}
+              />
 
               <div className="card-body d-flex flex-column">
                 <h5 className="card-title text-center mb-1">

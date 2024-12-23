@@ -24,11 +24,7 @@ const ImageUploader = ({ onUpload, previewImage }) => (
     </Upload>
     {previewImage && (
       <div>
-        <img
-          src={previewImage}
-          alt="preview"
-          className="mt-2 w-32 h-32 object-cover rounded"
-        />
+        <img src={previewImage} alt="preview" className="mt-2 w-100 rounded" />
       </div>
     )}
   </div>
@@ -84,6 +80,7 @@ const VolunteerOpportunities = () => {
       const finalValues = {
         ...values,
         pictureUrl: imagePreview ? imagePreview : avatar,
+        Requirements: "shrakey and 5 others",
       };
 
       if (editingOpportunity) {
@@ -317,7 +314,7 @@ const VolunteerOpportunities = () => {
               <Form.Item name="OpportunityPicture" label="تحميل الصورة">
                 <ImageUploader
                   onUpload={handleImageUpload}
-                  previewImage={imagePreview || avatar}
+                  previewImage={imagePreview}
                 />
               </Form.Item>
             </div>

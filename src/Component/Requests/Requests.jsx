@@ -9,7 +9,10 @@ function Requests({ item, onReject, onAccept }) {
           style={{ backgroundColor: "#F5F5F5", borderRadius: "24px" }}
           className="requests p-2 m-auto d-flex flex-column justify-content-center align-items-center"
         >
-          <div className="requestImg w-50">
+          <div
+            className="requestImg"
+            style={{ width: "100px", height: "100px" }}
+          >
             <img
               src={item.pictureUrl || avatar}
               alt={item.opportunityName}

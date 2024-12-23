@@ -22,6 +22,15 @@ const ImageUploader = ({ onUpload, previewImage }) => (
         <PlusOutlined /> تحميل
       </button>
     </Upload>
+    {previewImage && (
+      <div>
+        <img
+          src={previewImage}
+          alt="preview"
+          className="mt-2 w-32 h-32 object-cover rounded"
+        />
+      </div>
+    )}
   </div>
 );
 
@@ -31,7 +40,6 @@ const VolunteerOpportunities = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingOpportunity, setEditingOpportunity] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const [imageError, setImageError] = useState(false);
   const [form] = Form.useForm();
 
   const fetchOpportunities = async () => {
@@ -54,14 +62,14 @@ const VolunteerOpportunities = () => {
 
   const openModal = (opportunity = null) => {
     setEditingOpportunity(opportunity);
-    setImagePreview(opportunity?.pictureUrl || null);
+    setImagePreview(opportunity?.pictureUrl || avatar);
     form.resetFields();
     if (opportunity) {
       form.setFieldsValue({
         title: opportunity.title,
         location: opportunity.location,
-        startDate: moment(opportunity.startDate),
-        endDate: moment(opportunity.endDate),
+        startDate: opportunity.startDate ? moment(opportunity.startDate) : null,
+        endDate: opportunity.endDate ? moment(opportunity.endDate) : null,
         totalHours: opportunity.totalHours,
         maxVolunteers: opportunity.maxVolunteers,
         category: opportunity.category,
@@ -73,11 +81,16 @@ const VolunteerOpportunities = () => {
 
   const handleSave = async (values) => {
     try {
+      const finalValues = {
+        ...values,
+        pictureUrl: imagePreview ? imagePreview : avatar,
+      };
+
       if (editingOpportunity) {
-        await updateOpportunity(editingOpportunity.id, values);
+        await updateOpportunity(editingOpportunity.id, finalValues);
         message.success("تم التحديث بنجاح");
       } else {
-        await createOpportunity(values);
+        await createOpportunity(finalValues);
         message.success("تمت الإضافة بنجاح");
       }
 
@@ -125,82 +138,78 @@ const VolunteerOpportunities = () => {
         <h2 className="text-2xl font-bold mb-4">فرص التطوع</h2>
       </div>
 
-      {loading ? (
-        <Spin tip="جاري التحميل..." className="my-4" />
-      ) : (
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mt-4">
-          {opportunities.map((opportunity) => (
-            <div key={opportunity.id} className="col  d-flex flex-column">
-              <div
-                className="card h-100 px-2"
-                style={{
-                  border: "none",
-                  backgroundColor: "#F5F5F5",
-                  borderRadius: "24px",
-                }}
-              >
-                {opportunity.pictureUrl && (
-                  <img
-                    src={opportunity.pictureUrl}
-                    alt={opportunity.title}
-                    className="card-img-top"
-                    style={{
-                      height: "200px",
-                      objectFit: "cover",
-                      boxSizing: "content-box",
-                      borderRadius: "50%",
-                    }}
-                  />
-                )}
+      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mt-4">
+        {opportunities.map((opportunity) => (
+          <div key={opportunity.id} className="col d-flex flex-column">
+            <div
+              className="card h-100 px-2"
+              style={{
+                border: "none",
+                backgroundColor: "#F5F5F5",
+                borderRadius: "24px",
+              }}
+            >
+              {opportunity.pictureUrl && (
+                <img
+                  src={opportunity.pictureUrl}
+                  alt={opportunity.title}
+                  className="card-img-top"
+                  style={{
+                    height: "200px",
+                    objectFit: "cover",
+                    boxSizing: "content-box",
+                    borderRadius: "50%",
+                  }}
+                />
+              )}
 
-                <div className="card-body d-flex flex-column">
-                  <h5 className="card-title text-center mb-1">
-                    {opportunity.title}
-                  </h5>
+              <div className="card-body d-flex flex-column">
+                <h5 className="card-title text-center mb-1">
+                  {opportunity.title}
+                </h5>
 
-                  <p
-                    className="card-text overflow-hidden text-center mb-4"
+                <p
+                  className="card-text overflow-hidden text-center mb-4"
+                  style={{
+                    width: "100%",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {opportunity.description || "لا يوجد وصف متاح"}
+                </p>
+
+                <div className="d-flex flex-column align-items-center justify-content-between text-sm text-dark mb-4">
+                  <span>{opportunity.location}</span>
+                  <span>{opportunity.category}</span>
+                  <span>{opportunity.maxVolunteers} متطوع</span>
+                </div>
+
+                <div className="d-flex justify-content-center gap-3">
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => openModal(opportunity)}
+                    style={{ backgroundColor: "#214D97" }}
+                  >
+                    تعديل
+                  </button>
+                  <button
+                    className="btn"
+                    onClick={() => handleDelete(opportunity.id)}
                     style={{
-                      width: "100%",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
+                      border: "1px solid #972121",
+                      color: "#972121",
+                      fontSize: "20px",
                     }}
                   >
-                    {opportunity.description || "لا يوجد وصف متاح"}
-                  </p>
-
-                  <div className="d-flex flex-column align-items-center justify-content-between text-sm text-dark mb-4">
-                    <span>{opportunity.location}</span>
-                    <span>{opportunity.category}</span>
-                    <span>{opportunity.maxVolunteers} متطوع</span>
-                  </div>
-
-                  <div className="d-flex justify-content-center gap-3">
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => openModal(opportunity)}
-                      style={{ backgroundColor: "#214D97" }}
-                    >
-                      تعديل
-                    </button>
-                    <button
-                      className="btn"
-                      onClick={() => handleDelete(opportunity.id)}
-                      style={{
-                        border: "1px solid #972121",
-                        color: "#972121",
-                        fontSize: "20px",
-                      }}
-                    >
-                      حذف
-                    </button>
-                  </div>
+                    حذف
+                  </button>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+        ))}
+      </div>
 
       <Modal
         title={editingOpportunity ? "تعديل الفرصة" : "إضافة فرصة"}
@@ -213,8 +222,8 @@ const VolunteerOpportunities = () => {
         <Form form={form} layout="vertical" onFinish={handleSave}>
           <Form.Item
             name="title"
-            label="المحافظة"
-            rules={[{ required: true, message: "الرجاء إدخال العنوان" }]}
+            label="اسم الفرصة"
+            rules={[{ required: true, message: "الرجاء إدخال اسم الفرصة" }]}
           >
             <Input />
           </Form.Item>
@@ -308,7 +317,7 @@ const VolunteerOpportunities = () => {
               <Form.Item name="OpportunityPicture" label="تحميل الصورة">
                 <ImageUploader
                   onUpload={handleImageUpload}
-                  previewImage={imagePreview}
+                  previewImage={imagePreview || avatar}
                 />
               </Form.Item>
             </div>

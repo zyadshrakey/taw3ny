@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Form, Input, message, Upload, Select } from "antd";
+import { Modal, Form, Input, message, Upload, Select, Pagination } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
 import {
@@ -38,12 +38,17 @@ const VolunteerOpportunities = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [form] = Form.useForm();
 
-  const fetchOpportunities = async () => {
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8); // 8 cards per page
+  const [totalCount, setTotalCount] = useState(0); // Total number of opportunities
+
+  const fetchOpportunities = async (pageIndex = 1, pageSize = 8) => {
     setLoading(true);
     try {
-      const response = await getOpportunities();
-      console.log(response);
+      const response = await getOpportunities(pageIndex, pageSize);
       setOpportunities(response.data.data);
+      setTotalCount(response.data.count); // Set total count for pagination
     } catch (error) {
       message.error("فشل في تحميل البيانات");
     } finally {
@@ -53,8 +58,8 @@ const VolunteerOpportunities = () => {
 
   useEffect(() => {
     Interceptor();
-    fetchOpportunities();
-  }, []);
+    fetchOpportunities(currentPage, pageSize);
+  }, [currentPage, pageSize]);
 
   const openModal = (opportunity = null) => {
     setEditingOpportunity(opportunity);
@@ -85,17 +90,14 @@ const VolunteerOpportunities = () => {
 
       if (editingOpportunity) {
         await updateOpportunity(editingOpportunity.id, finalValues);
-
         message.success("تم التحديث بنجاح");
       } else {
         await createOpportunity(finalValues);
-        console.log(finalValues);
-
         message.success("تمت الإضافة بنجاح");
       }
 
       setIsModalVisible(false);
-      fetchOpportunities();
+      fetchOpportunities(currentPage, pageSize);
     } catch (error) {
       message.error("فشل في الحفظ");
     }
@@ -111,15 +113,23 @@ const VolunteerOpportunities = () => {
     try {
       await deleteOpportunity(id);
       message.success("تم الحذف بنجاح");
-      fetchOpportunities();
+      fetchOpportunities(currentPage, pageSize);
     } catch (error) {
       message.error("فشل في الحذف");
     }
   };
 
+  const handlePageChange = (page, newPageSize) => {
+    setCurrentPage(page);
+    setPageSize(newPageSize);
+  };
+
   return (
-    <div className="container mx-auto mt-4">
-      <div className="d-flex align-items-center justify-content-between mb-4">
+    <>
+      <div
+        className="d-flex m-auto align-items-center justify-content-between"
+        style={{ width: "90%" }}
+      >
         <div className="btn">
           <button
             className="p-3"
@@ -135,77 +145,68 @@ const VolunteerOpportunities = () => {
           </button>
         </div>
 
-        <h2 className="text-2xl font-bold mb-4">فرص التطوع</h2>
+        <h2 className="text-2xl font-bold">فرص التطوع</h2>
       </div>
+      <div className="container mx-auto m-1" dir="rtl">
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+          {opportunities
+            .slice((currentPage - 1) * pageSize, currentPage * pageSize)
+            .map((opportunity) => (
+              <div key={opportunity.id} className="col d-flex flex-column">
+                <div className="p-3 border-0 bg-light shadow rounded-4">
+                  <img
+                    src={opportunity.pictureUrl || avatar}
+                    alt={opportunity.title}
+                    className="card-img-top rounded-3"
+                    style={{ height: "110px", objectFit: "cover" }}
+                  />
 
-      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mt-4">
-        {opportunities.map((opportunity) => (
-          <div key={opportunity.id} className="col d-flex flex-column">
-            <div
-              className="card h-100 px-2"
-              style={{
-                border: "none",
-                backgroundColor: "#F5F5F5",
-                borderRadius: "24px",
-              }}
-            >
-              <img
-                src={opportunity.pictureUrl || avatar}
-                alt={opportunity.title}
-                className="card-img-top"
-                style={{
-                  height: 200,
-                  objectFit: "cover",
-                  borderRadius: "50%",
-                }}
-              />
+                  <div className="d-flex flex-column pt-3">
+                    <h5 className="card-title text-center mb-1 text-truncate fw-bold">
+                      {opportunity.title}
+                    </h5>
 
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title text-center mb-1">
-                  {opportunity.title}
-                </h5>
+                    <p className="card-text text-center mb-1 text-truncate">
+                      {opportunity.description || "لا يوجد وصف متاح"}
+                    </p>
 
-                <p
-                  className="card-text overflow-hidden text-center mb-4"
-                  style={{
-                    width: "100%",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {opportunity.description || "لا يوجد وصف متاح"}
-                </p>
+                    <div className="d-flex flex-column align-items-center justify-content-between text-dark mb-3 small">
+                      <span>{opportunity.location}</span>
+                      <span>{opportunity.category}</span>
+                      <span>{opportunity.maxVolunteers} متطوع</span>
+                    </div>
 
-                <div className="d-flex flex-column align-items-center justify-content-between text-sm text-dark mb-4">
-                  <span>{opportunity.location}</span>
-                  <span>{opportunity.category}</span>
-                  <span>{opportunity.maxVolunteers} متطوع</span>
-                </div>
-
-                <div className="d-flex justify-content-center gap-3">
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => openModal(opportunity)}
-                    style={{ backgroundColor: "#214D97" }}
-                  >
-                    تعديل
-                  </button>
-                  <button
-                    className="btn"
-                    onClick={() => handleDelete(opportunity.id)}
-                    style={{
-                      border: "1px solid #972121",
-                      color: "#972121",
-                      fontSize: "20px",
-                    }}
-                  >
-                    حذف
-                  </button>
+                    <div className="d-flex justify-content-center gap-3">
+                      <button
+                        className="btn btn-primary bg-primary text-white"
+                        onClick={() => openModal(opportunity)}
+                      >
+                        تعديل
+                      </button>
+                      <button
+                        className="btn btn-outline-danger"
+                        onClick={() => handleDelete(opportunity.id)}
+                      >
+                        حذف
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        ))}
+            ))}
+        </div>
+
+        {/* Pagination */}
+        <div className="d-flex justify-content-center mt-4">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={totalCount}
+            onChange={handlePageChange}
+            showSizeChanger
+            // pageSizeOptions={["8", "16", "24"]}
+          />
+        </div>
       </div>
 
       <Modal
@@ -329,7 +330,7 @@ const VolunteerOpportunities = () => {
           </div>
         </Form>
       </Modal>
-    </div>
+    </>
   );
 };
 

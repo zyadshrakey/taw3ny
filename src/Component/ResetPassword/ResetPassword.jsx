@@ -207,6 +207,7 @@ const ResetPassword = () => {
                       width: "503px",
                       borderRadius: "16px",
                     }}
+                    dir="rtl"
                   />
                 </Form.Item>
                 <Button
@@ -246,7 +247,15 @@ const ResetPassword = () => {
                     placeholder="أدخل كلمة المرور الجديدة"
                     onChange={(e) => setNewPassword(e.target.value)}
                     value={newPassword}
-                    className="form-control"
+                    className="form-control w-100"
+                    style={{
+                      paddingRight: "40px",
+                      border: "1px solid #777777",
+                      height: "48px",
+                      width: "503px",
+                      borderRadius: "16px",
+                    }}
+                    dir="rtl"
                   />
                 </Form.Item>
                 <Form.Item
@@ -274,14 +283,28 @@ const ResetPassword = () => {
                     placeholder="تأكيد كلمة المرور"
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     value={confirmPassword}
-                    className="form-control"
+                    className="form-control w-100"
+                    style={{
+                      paddingRight: "40px",
+                      border: "1px solid #777777",
+                      height: "48px",
+                      width: "503px",
+                      borderRadius: "16px",
+                      fontWeight: "400",
+                    }}
+                    dir="rtl"
                   />
                 </Form.Item>
                 <Button
                   type="primary"
                   htmlType="submit"
                   className="w-100 btn"
-                  style={{ backgroundColor: "#214D97", color: "white" }}
+                  style={{
+                    backgroundColor: "#214D97",
+                    color: "white",
+                    borderRadius: "24px",
+                    height: "48px",
+                  }}
                   loading={loading}
                 >
                   إعادة تعيين كلمة المرور
@@ -291,12 +314,18 @@ const ResetPassword = () => {
 
             {currentStep === 3 && (
               <div className="text-center">
-                <h2>تم إعادة تعيين كلمة المرور بنجاح!</h2>
+                <h2>!تم إعادة تعيين كلمة المرور بنجاح</h2>
                 <Link to="/login">
                   <Button
                     type="primary"
-                    className="btn py-2 px-4 d-flex align-items-center"
-                    style={{ backgroundColor: "#214D97", color: "white" }}
+                    className="btn py-2 w-100 my-3 px-4 d-flex align-items-center justify-content-center"
+                    style={{
+                      backgroundColor: "#214D97",
+                      color: "white",
+                      borderRadius: "24px",
+                      height: "48px",
+                      textDecoration: "none",
+                    }}
                   >
                     العودة إلى صفحة تسجيل الدخول
                   </Button>

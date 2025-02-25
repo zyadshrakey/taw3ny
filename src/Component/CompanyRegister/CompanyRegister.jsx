@@ -37,14 +37,22 @@ function CompanyRegister() {
   }
 
   async function sendRegisterDataToApi() {
+    let regNum = 217;
+    regNum++;
+
+    const userWithRegNum = {
+      ...user,
+      registrationNumber: regNum.toString(),
+    };
+
     try {
       let { data } = await axios.post(
         `https://wezaa.runasp.net/Auth/register-charity`,
-        user
+        userWithRegNum
       );
       console.log(data);
       if (!data.error) {
-        localStorage.setItem("");
+        localStorage.setItem("token", data.token);
         navigate("/login");
         console.log(data.message);
         setLoading(false);
@@ -57,7 +65,7 @@ function CompanyRegister() {
       setError(
         errors.response?.data?.message || "An unexpected error occurred."
       );
-      console.error("Error:", errors.response?.data);
+      console.log("Error:", errors.response?.data);
     }
   }
 
@@ -94,17 +102,17 @@ function CompanyRegister() {
         .pattern(/^[0-9]+$/)
         .required(),
       address: Joi.string().required(),
-      facebookLink: Joi.string()
-        .pattern(/^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9(\.\?)?]/)
-        .required(),
-      instagramLink: Joi.string()
-        .pattern(/^(https?:\/\/)?(www\.)?instagram\.com\/([a-zA-Z0-9._]+)\/?$/)
-        .required(),
-      websiteUrl: Joi.string()
-        .pattern(
-          /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/
-        )
-        .required(),
+      // facebookLink: Joi.string()
+      //   .pattern(/^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9(\.\?)?]/)
+      //   .required(),
+      // instagramLink: Joi.string()
+      //   .pattern(/^(https?:\/\/)?(www\.)?instagram\.com\/([a-zA-Z0-9._]+)\/?$/)
+      //   .required(),
+      // websiteUrl: Joi.string()
+      //   .pattern(
+      //     /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/
+      //   )
+      //   .required(),
       registrationNumber: Joi.string()
         .pattern(/^[0-9\u0621-\u064A]{5,10}$/)
         .required(),
@@ -267,7 +275,7 @@ function CompanyRegister() {
                 style={{ position: "absolute", right: "20px", bottom: "20px" }}
               ></i>
               <input
-                type="url"
+                // type="url"
                 onChange={getUserData}
                 name="facebookLink"
                 placeholder="لينك الفيسبوك "
@@ -287,7 +295,7 @@ function CompanyRegister() {
                 style={{ position: "absolute", right: "20px", bottom: "20px" }}
               ></i>
               <input
-                type="url"
+                // type="url"
                 onChange={getUserData}
                 name="instagramLink"
                 placeholder="لينك الانستجرام "
@@ -307,7 +315,7 @@ function CompanyRegister() {
                 style={{ position: "absolute", right: "20px", bottom: "20px" }}
               ></i>
               <input
-                type="url"
+                // type="url"
                 onChange={getUserData}
                 name="websiteUrl"
                 placeholder=" الموقع الإلكترونى "
@@ -365,9 +373,7 @@ function CompanyRegister() {
             </Link>
           </p>
         </div>
-        <div className="compUser-img ">
-         
-        </div>
+        <div className="compUser-img "></div>
       </div>
     </>
   );

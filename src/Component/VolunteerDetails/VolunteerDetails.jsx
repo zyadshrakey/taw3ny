@@ -34,7 +34,7 @@ function VolunteerDetails() {
         {volunteerInfo && (
             <div className='row '>
                 <div className='col-md-5 d-flex Img text-center mb-3 mb-md-0 align-items-center justify-content-center' style={{flexShrink:0}}>
-                    <img src={volunteerInfo.pictureUrl && img} alt={volunteerInfo.fullName || 'Volunteer Img'} className='rounded-circle' />
+                    <img src={volunteerInfo.pictureUrl || img} alt={volunteerInfo.fullName || 'Volunteer Img'} className='rounded-circle' />
                 </div>
                 
                 <div className='col-md-7 d-flex align-items-center justify-content-center py-4'>

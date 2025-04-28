@@ -1,131 +1,105 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import Requests from '../Requests/Requests';
+import React, { useState, useEffect, useCallback } from "react";
+import avatar from "../../assets/volunteer-services-bureau logo@2x.png";
+import { Interceptor } from "../../Apis/interceptor";
+import {
+  acceptApplication,
+  getCharityApplications,
+  rejectApplication,
+} from "../../Apis/requestes";
 
-function VolunteerRequestes({userData}) {
-
+function VolunteerRequests() {
   const [requestsData, setRequestsData] = useState([]);
-  const [loading, setLoading] = useState(false)
-  const [ error, setError] = useState(null)
+  const [loading, setLoading] = useState(false);
 
-  async function volunteerRequestApi(){
-    try{
-      const token= localStorage.getItem('userToken')
-      if(!token){
-        console.error('No token found in localStorage')
-        setError('No Token Found')
-        setLoading(false)
-        return;
-      }
-    setLoading(true)
-    
-    let {data}= await axios.get(`https://wezaa.runasp.net/VolunteerApplications`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-    console.log(data.data)
+  useEffect(() => {
+    Interceptor();
+    fetchRequests();
+  }, []);
 
-    if (data && data.data) {
-      setRequestsData(data.data);
-    } else {
-      setError('No data found.');
-    }
-   }
-    catch(error){
-      console.log(error)
-      setError('Failed to load requests.');
-    }
-    finally{
-      setLoading(false)
-    }
-  }
-
-  const acceptedBack= async(id)=>{
-    const token= localStorage.getItem('userToken')
-    if (!token) {
-      throw new Error('No token found in localStorage');
-    }
-    try{
-      await axios.put(`https://wezaa.runasp.net/VolunteerApplications/accept/${id}`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-    }
-    catch(error){
-      throw new Error('Failed to accept the request');
-    }
-
-
-  }
-
-
-  const rejectBack= async(id)=>{
-    const token= localStorage.getItem('userToken')
-    if (!token) {
-      throw new Error('No token found in localStorage');
-    }
-    try{
-      await axios.put(`https://wezaa.runasp.net/VolunteerApplications/reject/${id}`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-    }
-    catch(error){
-      throw new Error('Failed to accept the request');
-    }
-
-
-  }
-
-  const handleAccept = async (id) => {
+  const fetchRequests = useCallback(async () => {
+    setLoading(true);
     try {
-      await acceptedBack(id);  
-      alert('تمت الموافقة على الطلب'); 
-      volunteerRequestApi(); 
+      const { data } = await getCharityApplications();
+      setRequestsData(data.data || []);
     } catch (error) {
-      console.error(error);
-      alert('حدث خطأ أثناء الموافقة'); 
+      console.error("Error fetching requests:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const handleAction = async (id, action) => {
+    try {
+      await action(id);
+      setRequestsData((prev) => prev.filter((req) => req.id !== id));
+    } catch (error) {
+      console.error("Error handling action:", error);
     }
   };
 
-  const handleReject = async (id) => {
-    try {
-      await rejectBack(id); 
-      alert('تم رفض الطلب'); 
-      volunteerRequestApi();
-    } catch (error) {
-      console.error(error);
-      alert('حدث خطأ أثناء الرفض'); 
-    }
-  };
-
-  useEffect(()=>{
-    volunteerRequestApi()
-
-  },[])
-
-  
-  
- return(
-  <div className='container'>
-    <div className="title" dir='rtl'>
-      <h1 className='py-2' style={{fontWeight:'400', fontSize:'40px', lineHeight:'56px'}}>طلبات التطوع</h1>
+  return (
+    <div className="container py-3" dir="rtl">
+      <h2 className="text-2xl font-bold">طلبات التطوع</h2>
+      {loading ? (
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      ) : requestsData.length > 0 ? (
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+          {requestsData.map((request) => (
+            <div key={request.id} className="col pt-2">
+              <VolunteerCard {...request} handleAction={handleAction} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="alert alert-warning text-center">
+          لا توجد طلبات متاحة
+        </div>
+      )}
     </div>
-    {loading?
-    (<div className='d-flex justify-content-center align-items center'>
-      <i style={{color:'#214D97', fontSize:'25px'}} className="fa-solid fa-spinner"></i>
-    </div>)
-    
-  :''}
-      <div className='row py-5'>
-        {requestsData.map((item,index)=><Requests item={item} key={index} onAccept={handleAccept} onReject={handleReject}/>)}
-      </div>
-  </div>
- )
+  );
 }
 
-export default VolunteerRequestes
+const VolunteerCard = ({
+  id,
+  pictureUrl,
+  opportunityName,
+  volunteerName,
+  totalVolunteerCount,
+  volunteerEmail,
+  volunteerPhone,
+  handleAction,
+}) => (
+  <div className="p-4 border-0 bg-light shadow rounded-4 d-flex flex-column align-items-center">
+    <img
+      src={pictureUrl || avatar}
+      alt={opportunityName}
+      className="rounded-circle"
+      style={{ height: "150px" }}
+    />
+    <h5 className="mt-2 fw-bold">{volunteerName}</h5>
+    <h6 className="text-muted">{opportunityName}</h6>
+    <p className="text-muted mb-2">{`عدد المتطوعين: ${totalVolunteerCount}`}</p>
+    <p className="text-muted">{volunteerEmail}</p>
+    <p className="text-muted">{volunteerPhone}</p>
+    <div className="d-flex gap-2">
+      <button
+        className="btn btn-primary bg-primary text-white"
+        onClick={() => handleAction(id, acceptApplication)}
+      >
+        قبول
+      </button>
+      <button
+        className="btn btn-outline-danger"
+        onClick={() => handleAction(id, rejectApplication)}
+      >
+        رفض
+      </button>
+    </div>
+  </div>
+);
+
+export default VolunteerRequests;

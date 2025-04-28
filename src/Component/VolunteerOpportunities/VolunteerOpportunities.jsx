@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Form, Input, message, DatePicker, Upload, Spin } from "antd";
+import { Modal, Form, Input, message, Upload, Select, Pagination } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
 import {
@@ -9,24 +9,7 @@ import {
   updateOpportunity,
 } from "../../Apis/opportunities";
 import { Interceptor } from "../../Apis/interceptor";
-
-const { RangePicker } = DatePicker;
-
-const ActionButton = ({ label, onClick, style }) => (
-  <button
-    className="btn fw-bold"
-    style={{
-      padding: "0 20px",
-      height: "40px",
-      backgroundColor: "#214D97",
-      color: "#fff",
-      ...style,
-    }}
-    onClick={onClick}
-  >
-    {label}
-  </button>
-);
+import avatar from "../../assets/volunteer-services-bureau logo@2x.png";
 
 const ImageUploader = ({ onUpload, previewImage }) => (
   <div>
@@ -35,19 +18,14 @@ const ImageUploader = ({ onUpload, previewImage }) => (
       showUploadList={false}
       onChange={onUpload}
     >
-      <button
-        type="button"
-        className="bg-blue-500 text-white px-3 py-1 rounded"
-      >
+      <button type="button" className="bg-blue-500 px-3 py-1 rounded">
         <PlusOutlined /> تحميل
       </button>
     </Upload>
     {previewImage && (
-      <img
-        src={previewImage}
-        alt="Uploaded Preview"
-        className="mt-2 w-full h-40 object-cover rounded"
-      />
+      <div>
+        <img src={previewImage} alt="preview" className="mt-2 w-100 rounded" />
+      </div>
     )}
   </div>
 );
@@ -60,11 +38,17 @@ const VolunteerOpportunities = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [form] = Form.useForm();
 
-  const fetchOpportunities = async () => {
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8); // 8 cards per page
+  const [totalCount, setTotalCount] = useState(0); // Total number of opportunities
+
+  const fetchOpportunities = async (pageIndex = 1, pageSize = 8) => {
     setLoading(true);
     try {
-      const response = await getOpportunities();
+      const response = await getOpportunities(pageIndex, pageSize);
       setOpportunities(response.data.data);
+      setTotalCount(response.data.count); // Set total count for pagination
     } catch (error) {
       message.error("فشل في تحميل البيانات");
     } finally {
@@ -74,17 +58,23 @@ const VolunteerOpportunities = () => {
 
   useEffect(() => {
     Interceptor();
-    fetchOpportunities();
-  }, []);
+    fetchOpportunities(currentPage, pageSize);
+  }, [currentPage, pageSize]);
 
   const openModal = (opportunity = null) => {
     setEditingOpportunity(opportunity);
-    setImagePreview(opportunity?.pictureUrl || null);
+    setImagePreview(opportunity?.pictureUrl);
     form.resetFields();
     if (opportunity) {
       form.setFieldsValue({
-        ...opportunity,
-        duration: [moment(opportunity.startDate), moment(opportunity.endDate)],
+        title: opportunity.title,
+        location: opportunity.location,
+        startDate: opportunity.startDate,
+        endDate: opportunity.endDate,
+        totalHours: opportunity.totalHours,
+        maxVolunteers: opportunity.maxVolunteers,
+        category: opportunity.category,
+        description: opportunity.description,
       });
     }
     setIsModalVisible(true);
@@ -92,28 +82,25 @@ const VolunteerOpportunities = () => {
 
   const handleSave = async (values) => {
     try {
-      const { duration, ...restValues } = values;
-      const dataToSend = {
-        ...restValues,
-        startDate: duration[0].format("YYYY-MM-DD"),
-        endDate: duration[1].format("YYYY-MM-DD"),
+      const finalValues = {
+        ...values,
         pictureUrl: imagePreview,
+        Requirements: "shrakey and 5 others",
       };
 
       if (editingOpportunity) {
-        await updateOpportunity(editingOpportunity.id, dataToSend);
+        await updateOpportunity(editingOpportunity.id, finalValues);
         message.success("تم التحديث بنجاح");
       } else {
-        await createOpportunity(dataToSend);
+        await createOpportunity(finalValues);
         message.success("تمت الإضافة بنجاح");
       }
 
       setIsModalVisible(false);
-      fetchOpportunities();
+      fetchOpportunities(currentPage, pageSize);
     } catch (error) {
       message.error("فشل في الحفظ");
     }
-    
   };
 
   const handleImageUpload = ({ file }) => {
@@ -122,138 +109,228 @@ const VolunteerOpportunities = () => {
     reader.readAsDataURL(file);
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await deleteOpportunity(id);
+      message.success("تم الحذف بنجاح");
+      fetchOpportunities(currentPage, pageSize);
+    } catch (error) {
+      message.error("فشل في الحذف");
+    }
+  };
+
+  const handlePageChange = (page, newPageSize) => {
+    setCurrentPage(page);
+    setPageSize(newPageSize);
+  };
+
   return (
-    <div className="container mx-auto mt-4">
-      <div className="d-flex align-items-center justify-content-between mb-4">
-          <div className="btn"><button className="p-3" style={{backgroundColor:'#214D97', color:'#F5F5F5', border:'none', borderRadius:'8px'}} onClick={()=>openModal()}>إضافة فرصة <i class="fa-regular fa-square-plus"></i></button></div>
-          
-        <h2 className="text-2xl font-bold mb-4">فرص التطوع</h2>
+    <>
+      <div
+        className="d-flex m-auto align-items-center justify-content-between"
+        style={{ width: "90%" }}
+      >
+        <div className="btn">
+          <button
+            className="p-3"
+            style={{
+              backgroundColor: "#214D97",
+              color: "#F5F5F5",
+              border: "none",
+              borderRadius: "8px",
+            }}
+            onClick={() => openModal()}
+          >
+            إضافة فرصة <i className="fa-regular fa-square-plus"></i>
+          </button>
+        </div>
+
+        <h2 className="text-2xl font-bold">فرص التطوع</h2>
       </div>
-
-      {loading ? (
-        <Spin tip="جاري التحميل..." className="my-4" />
-      ) : (
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mt-4">
-          {opportunities.map((opportunity) => (
-            <div
-              key={opportunity.id}
-              className="col  d-flex flex-column"
-            >
-              <div className="card h-100 px-2" style={{border:'none' ,backgroundColor:'#F5F5F5', borderRadius:'24px'}}>
-                {opportunity.pictureUrl && (
+      <div className="container mx-auto m-1" dir="rtl">
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+          {opportunities
+            .slice((currentPage - 1) * pageSize, currentPage * pageSize)
+            .map((opportunity) => (
+              <div key={opportunity.id} className="col d-flex flex-column">
+                <div className="p-3 border-0 bg-light shadow rounded-4">
                   <img
-                    src={opportunity.pictureUrl}
+                    src={opportunity.pictureUrl || avatar}
                     alt={opportunity.title}
-                    className="card-img-top"
-                    style={{ height: "200px", objectFit: "cover", boxSizing:'content-box', borderRadius:'50%' }}
+                    className="card-img-top rounded-3"
+                    style={{ height: "110px", objectFit: "cover" }}
                   />
-                )}
 
-                <div className="card-body d-flex flex-column">
-                  <h5 className="card-title text-center mb-1">
-                    {opportunity.title}
-                  </h5>
+                  <div className="d-flex flex-column pt-3">
+                    <h5 className="card-title text-center mb-1 text-truncate fw-bold">
+                      {opportunity.title}
+                    </h5>
 
-                  <p
-                    className="card-text overflow-hidden text-center mb-4"
-                    style={{
-                      width: "100%",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {opportunity.description || "لا يوجد وصف متاح"}
-                  </p>
+                    <p className="card-text text-center mb-1 text-truncate">
+                      {opportunity.description || "لا يوجد وصف متاح"}
+                    </p>
 
-                  <div className="d-flex flex-column align-items-center justify-content-between text-sm text-dark mb-4">
-                    <span>{opportunity.location}</span>
-                    <span>{opportunity.category}</span>
-                    <span>{opportunity.maxVolunteers} متطوع</span>
-                  </div>
+                    <div className="d-flex flex-column align-items-center justify-content-between text-dark mb-3 small">
+                      <span>{opportunity.location}</span>
+                      <span>{opportunity.category}</span>
+                      <span>{opportunity.maxVolunteers} متطوع</span>
+                    </div>
 
-                  <div className="d-flex justify-content-center gap-3">
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => openModal(opportunity)}
-                      style={{backgroundColor:'#214D97'}}
-                    >
-                      تعديل
-                    </button>
-                    <button
-                      className="btn"
-                      onClick={() => deleteOpportunity(opportunity.id)}
-                      style={{border:'1px solid #972121', color:'#972121', fontSize:'20px'}}
-                    >
-                      حذف
-                    </button>
+                    <div className="d-flex justify-content-center gap-3">
+                      <button
+                        className="btn btn-primary bg-primary text-white"
+                        onClick={() => openModal(opportunity)}
+                      >
+                        تعديل
+                      </button>
+                      <button
+                        className="btn btn-outline-danger"
+                        onClick={() => handleDelete(opportunity.id)}
+                      >
+                        حذف
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
-      )}
+
+        {/* Pagination */}
+        <div className="d-flex justify-content-center mt-4">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={totalCount}
+            onChange={handlePageChange}
+            showSizeChanger
+            // pageSizeOptions={["8", "16", "24"]}
+          />
+        </div>
+      </div>
 
       <Modal
         title={editingOpportunity ? "تعديل الفرصة" : "إضافة فرصة"}
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         onOk={() => form.submit()}
+        okText="حفظ"
+        cancelText="اغلاق"
       >
         <Form form={form} layout="vertical" onFinish={handleSave}>
           <Form.Item
             name="title"
-            label="المحافظة"
-            rules={[{ required: true, message: "الرجاء إدخال العنوان" }]}
+            label="اسم الفرصة"
+            rules={[{ required: true, message: "الرجاء إدخال اسم الفرصة" }]}
           >
             <Input />
           </Form.Item>
 
-          <Form.Item
-            name="location"
-            label="الموقع"
-            rules={[{ required: true, message: "الرجاء إدخال الموقع" }]}
-          >
-            <Input />
-          </Form.Item>
+          <div className="row">
+            <div className="col-md-12 mb-3">
+              <Form.Item
+                name="location"
+                label="الموقع"
+                rules={[{ required: true, message: "الرجاء إدخال الموقع" }]}
+              >
+                <Input className="form-control" />
+              </Form.Item>
+            </div>
+          </div>
 
-          <Form.Item
-            name="duration"
-            label="مدة الفرصة"
-            rules={[{ required: true, message: "الرجاء اختيار المدة" }]}
-          >
-            <RangePicker format="YYYY-MM-DD" />
-          </Form.Item>
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <Form.Item
+                name="startDate"
+                label="تاريخ البداية"
+                rules={[
+                  { required: true, message: "الرجاء إدخال تاريخ البداية" },
+                ]}
+              >
+                <Input type="date" className="form-control" />
+              </Form.Item>
+            </div>
+            <div className="col-md-6 mb-3">
+              <Form.Item
+                name="endDate"
+                label="تاريخ النهاية"
+                rules={[
+                  { required: true, message: "الرجاء إدخال تاريخ النهاية" },
+                ]}
+              >
+                <Input type="date" className="form-control" />
+              </Form.Item>
+            </div>
+          </div>
 
-          <Form.Item
-            name="maxVolunteers"
-            label="عدد المتطوعين المطلوب"
-            rules={[{ required: true, message: "الرجاء إدخال العدد المطلوب" }]}
-          >
-            <Input type="number" />
-          </Form.Item>
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <Form.Item
+                name="totalHours"
+                label="عدد الساعات المطلوبة"
+                rules={[
+                  { required: true, message: "الرجاء إدخال العدد المطلوب" },
+                ]}
+              >
+                <Input type="number" className="form-control" />
+              </Form.Item>
+            </div>
+            <div className="col-md-6 mb-3">
+              <Form.Item
+                name="maxVolunteers"
+                label="عدد المتطوعين المطلوب"
+                rules={[
+                  { required: true, message: "الرجاء إدخال العدد المطلوب" },
+                ]}
+              >
+                <Input type="number" className="form-control" />
+              </Form.Item>
+            </div>
+          </div>
 
-          <Form.Item
-            name="category"
-            label="الفئة"
-            rules={[{ required: true, message: "الرجاء إدخال الفئة" }]}
-          >
-            <Input />
-          </Form.Item>
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <Form.Item
+                name="category"
+                label="الفئة"
+                rules={[{ required: true, message: "الرجاء اختيار الفئة" }]}
+              >
+                <Select placeholder="اختر الفئة">
+                  {[
+                    { id: 0, name: "Education" },
+                    { id: 1, name: "Health" },
+                    { id: 2, name: "Relief" },
+                    { id: 3, name: "Environment" },
+                    { id: 4, name: "CommunityDevelopment" },
+                    { id: 5, name: "ArtsAndCulture" },
+                  ].map((category) => (
+                    <Select.Option key={category.id} value={category.name}>
+                      {category.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </div>
+            <div className="col-6 mb-3">
+              <Form.Item name="OpportunityPicture" label="تحميل الصورة">
+                <ImageUploader
+                  onUpload={handleImageUpload}
+                  previewImage={imagePreview}
+                />
+              </Form.Item>
+            </div>
+          </div>
 
-          <Form.Item name="description" label="الوصف">
-            <Input.TextArea rows={3} />
-          </Form.Item>
-
-          <Form.Item label="تحميل الصورة">
-            <ImageUploader
-              onUpload={handleImageUpload}
-              previewImage={imagePreview}
-            />
-          </Form.Item>
+          <div className="row">
+            <div className="col-12 mb-3">
+              <Form.Item name="description" label="الوصف">
+                <Input.TextArea rows={3} className="form-control" />
+              </Form.Item>
+            </div>
+          </div>
         </Form>
       </Modal>
-    </div>
+    </>
   );
 };
 

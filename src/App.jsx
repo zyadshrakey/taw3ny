@@ -11,6 +11,11 @@ import VolunteerRequestes from "./Component/VolunteerRequestes/VolunteerRequeste
 import VolunteerOpportunities from "./Component/VolunteerOpportunities/VolunteerOpportunities";
 import Profile from "./Component/Profile/Profile";
 import Home from "./Component/Home/Home";
+import VolunteerInOpportunity from "./Component/VolunteerInOpportunity/VolunteerInOpportunity";
+import VolunteerCharity from "./Component/VolunteerCharity/VolunteerCharity";
+import AttendanceTable from "./Component/AttendanceTable/AttendanceTable";
+import AttendanceRecord from "./Component/AttendanceRecord/AttendanceRecord";
+import GenerateQR from "./Component/GenerateQR/GenerateQR";
 
 function App() {
 
@@ -67,6 +72,46 @@ function App() {
           element: (
             <ProtectedRoute>
               <Profile userData={userData}/>
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "volunteerinopportunity",
+          element: (
+            <ProtectedRoute>
+              <VolunteerInOpportunity userData={userData}/>
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "volunteercharity",
+          element: (
+            <ProtectedRoute>
+              <VolunteerCharity userData={userData}/>
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "attentancetable",
+          element: (
+            <ProtectedRoute>
+              <AttendanceTable userData={userData}/>
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "attentancerecord",
+          element: (
+            <ProtectedRoute>
+              <AttendanceRecord userData={userData}/>
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "generateqr",
+          element: (
+            <ProtectedRoute>
+              <GenerateQR userData={userData}/>
             </ProtectedRoute>
           ),
         },

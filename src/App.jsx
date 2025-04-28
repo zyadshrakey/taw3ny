@@ -16,6 +16,8 @@ import VolunteerCharity from "./Component/VolunteerCharity/VolunteerCharity";
 import AttendanceTable from "./Component/AttendanceTable/AttendanceTable";
 import AttendanceRecord from "./Component/AttendanceRecord/AttendanceRecord";
 import GenerateQR from "./Component/GenerateQR/GenerateQR";
+import VolunteerDetails from "./Component/VolunteerDetails/VolunteerDetails";
+
 
 function App() {
 
@@ -112,6 +114,14 @@ function App() {
           element: (
             <ProtectedRoute>
               <GenerateQR userData={userData}/>
+            </ProtectedRoute>
+          ),
+        },
+         {
+          path: "volunteerdetails/:id",
+          element: (
+            <ProtectedRoute>
+              <VolunteerDetails userData={userData}/>
             </ProtectedRoute>
           ),
         },

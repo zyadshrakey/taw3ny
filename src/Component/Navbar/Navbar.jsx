@@ -38,7 +38,11 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarContent">
           <ul className="navbar-nav mx-auto mb-2 mb-lg-0 fs-5 fw-bold">
             
-            
+          <li style={{fontWeight:'400', fontSize:'18px'}} className="nav-item">
+              <Link className="nav-link" to="/attentancerecord">
+                سجل الحضور
+              </Link>
+            </li>
             <li style={{fontWeight:'400', fontSize:'18px'}} className="nav-item">
               <Link className="nav-link" to="/opportunities">
                 فرص التطوع

@@ -1,8 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/Logo.png";
-import hiImg from '../../assets/groundhog.png'
-
+import hiImg from "../../assets/groundhog.png";
 
 const Navbar = () => {
   function handleLogout() {
@@ -14,12 +13,17 @@ const Navbar = () => {
       className="navbar navbar-expand-lg navbar-light bg-white shadow-sm"
       style={{
         borderBottom: "1px solid rgba(33, 77, 151, 1)",
-        borderRadius: "0 0 10px 20px"
-        }}
+        borderRadius: "0 0 10px 20px",
+      }}
     >
       <div className="container-fluid">
         <Link className="navbar-brand d-flex align-items-center" to="/">
-          <img src={logo} alt="Logo" className="px-4" style={{ width: "90%" }} />
+          <img
+            src={logo}
+            alt="Logo"
+            className="px-4"
+            style={{ width: "90%" }}
+          />
         </Link>
 
         <button
@@ -36,28 +40,39 @@ const Navbar = () => {
 
         <div className="collapse navbar-collapse" id="navbarContent">
           <ul className="navbar-nav mx-auto mb-2 mb-lg-0 fs-5 fw-bold">
-            
-          <li style={{fontWeight:'400', fontSize:'18px'}} className="nav-item">
+            {/* <li style={{fontWeight:'400', fontSize:'18px'}} className="nav-item">
               <Link className="nav-link" to="/attentancerecord">
                 سجل الحضور
               </Link>
-            </li>
-            <li style={{fontWeight:'400', fontSize:'18px'}} className="nav-item">
+            </li> */}
+            <li
+              style={{ fontWeight: "400", fontSize: "18px" }}
+              className="nav-item"
+            >
               <Link className="nav-link" to="/opportunities">
                 فرص التطوع
               </Link>
             </li>
-            <li style={{fontWeight:'400', fontSize:'18px'}} className="nav-item">
+            <li
+              style={{ fontWeight: "400", fontSize: "18px" }}
+              className="nav-item"
+            >
               <Link className="nav-link" to="/Volunteer">
                 المتطوعين
               </Link>
             </li>
-            <li style={{fontWeight:'400', fontSize:'18px'}} className="nav-item">
+            <li
+              style={{ fontWeight: "400", fontSize: "18px" }}
+              className="nav-item"
+            >
               <Link className="nav-link" to="/requestes">
                 طلبات التطوع
               </Link>
             </li>
-            <li style={{fontWeight:'400', fontSize:'18px'}} className="nav-item">
+            <li
+              style={{ fontWeight: "400", fontSize: "18px" }}
+              className="nav-item"
+            >
               <Link className="nav-link" to="/profile">
                 ملف المؤسسة
               </Link>
@@ -65,7 +80,12 @@ const Navbar = () => {
           </ul>
 
           <div className="hiImg d-flex align-items-center">
-            <img src={hiImg} className=" pb-2 mx-2" style={{width:'50px'}} alt="" />
+            <img
+              src={hiImg}
+              className=" pb-2 mx-2"
+              style={{ width: "50px" }}
+              alt=""
+            />
           </div>
           <button
             className="btn fw-bold"
@@ -74,7 +94,7 @@ const Navbar = () => {
               height: "40px",
               backgroundColor: "#214D97",
               color: "#fff",
-              borderRadius:'8px'
+              borderRadius: "8px",
             }}
             onClick={handleLogout}
           >
@@ -83,8 +103,6 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
-
-
   );
 };
 

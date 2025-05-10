@@ -12,16 +12,12 @@ import VolunteerOpportunities from "./Component/VolunteerOpportunities/Volunteer
 import Profile from "./Component/Profile/Profile";
 import Home from "./Component/Home/Home";
 import VolunteerInOpportunity from "./Component/VolunteerInOpportunity/VolunteerInOpportunity";
-import VolunteerCharity from "./Component/VolunteerCharity/VolunteerCharity";
-import AttendanceTable from "./Component/AttendanceTable/AttendanceTable";
 import AttendanceRecord from "./Component/AttendanceRecord/AttendanceRecord";
 import GenerateQR from "./Component/GenerateQR/GenerateQR";
 import VolunteerDetails from "./Component/VolunteerDetails/VolunteerDetails";
 
-
 function App() {
-
-  const [userData, setUserData]= useState(null)
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     if (localStorage.getItem("userToken") !== null) {
@@ -31,17 +27,17 @@ function App() {
 
   let routers = createBrowserRouter([
     { path: "register", element: <CompanyRegister /> },
-    { path: "login", element: <Login saveUserData={saveUserData}/> },
+    { path: "login", element: <Login saveUserData={saveUserData} /> },
     { path: "reset-password", element: <ResetPassword /> },
     {
       path: "/",
-      element: <Layout userData={userData}/>,
+      element: <Layout userData={userData} />,
       children: [
         {
           path: "/",
           element: (
             <ProtectedRoute>
-              <Home/>
+              <Home />
             </ProtectedRoute>
           ),
         },
@@ -49,7 +45,7 @@ function App() {
           path: "requestes",
           element: (
             <ProtectedRoute>
-              <VolunteerRequestes userData={userData}/>
+              <VolunteerRequestes userData={userData} />
             </ProtectedRoute>
           ),
         },
@@ -62,18 +58,18 @@ function App() {
           ),
         },
         {
-          path:'volunteer',
-          element:(
+          path: "volunteer",
+          element: (
             <ProtectedRoute>
-              <Volunteer/>
+              <Volunteer />
             </ProtectedRoute>
-          )
+          ),
         },
         {
           path: "profile",
           element: (
             <ProtectedRoute>
-              <Profile userData={userData}/>
+              <Profile userData={userData} />
             </ProtectedRoute>
           ),
         },
@@ -81,7 +77,7 @@ function App() {
           path: "volunteerinopportunity",
           element: (
             <ProtectedRoute>
-              <VolunteerInOpportunity userData={userData}/>
+              <VolunteerInOpportunity userData={userData} />
             </ProtectedRoute>
           ),
         },
@@ -89,7 +85,7 @@ function App() {
           path: "volunteercharity",
           element: (
             <ProtectedRoute>
-              <VolunteerCharity userData={userData}/>
+              <VolunteerCharity userData={userData} />
             </ProtectedRoute>
           ),
         },
@@ -97,15 +93,15 @@ function App() {
           path: "attentancetable",
           element: (
             <ProtectedRoute>
-              <AttendanceTable userData={userData}/>
+              <AttendanceTable userData={userData} />
             </ProtectedRoute>
           ),
         },
         {
-          path: "attentancerecord",
+          path: "volunteerdetails/:id",
           element: (
             <ProtectedRoute>
-              <AttendanceRecord userData={userData}/>
+              <AttendanceRecord userData={userData} />
             </ProtectedRoute>
           ),
         },
@@ -113,15 +109,15 @@ function App() {
           path: "generateqr",
           element: (
             <ProtectedRoute>
-              <GenerateQR userData={userData}/>
+              <GenerateQR userData={userData} />
             </ProtectedRoute>
           ),
         },
-         {
+        {
           path: "volunteerdetails/:id",
           element: (
             <ProtectedRoute>
-              <VolunteerDetails userData={userData}/>
+              <VolunteerDetails userData={userData} />
             </ProtectedRoute>
           ),
         },
@@ -133,8 +129,8 @@ function App() {
     const encodedToke = localStorage.getItem("userToken");
     const decodedToken = jwtDecode(encodedToke);
     console.log(decodedToken);
-    setUserData(decodedToken)
-    console.log(userData)
+    setUserData(decodedToken);
+    console.log(userData);
   }
 
   return (

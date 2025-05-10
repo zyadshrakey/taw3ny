@@ -12,10 +12,8 @@ import VolunteerOpportunities from "./Component/VolunteerOpportunities/Volunteer
 import Profile from "./Component/Profile/Profile";
 import Home from "./Component/Home/Home";
 import VolunteerInOpportunity from "./Component/VolunteerInOpportunity/VolunteerInOpportunity";
-import VolunteerCharity from "./Component/VolunteerCharity/VolunteerCharity";
-import AttendanceTable from "./Component/AttendanceTable/AttendanceTable";
 import AttendanceRecord from "./Component/AttendanceRecord/AttendanceRecord";
-import GenerateQR from "./Component/GenerateQR/GenerateQR";
+import VolunteerDetails from "./Component/VolunteerDetails/VolunteerDetails";
 
 function App() {
 
@@ -83,22 +81,7 @@ function App() {
             </ProtectedRoute>
           ),
         },
-        {
-          path: "volunteercharity",
-          element: (
-            <ProtectedRoute>
-              <VolunteerCharity userData={userData}/>
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "attentancetable",
-          element: (
-            <ProtectedRoute>
-              <AttendanceTable userData={userData}/>
-            </ProtectedRoute>
-          ),
-        },
+      
         {
           path: "attentancerecord",
           element: (
@@ -107,11 +90,12 @@ function App() {
             </ProtectedRoute>
           ),
         },
+        
         {
-          path: "generateqr",
+          path: "volunteerdetails/:id",
           element: (
             <ProtectedRoute>
-              <GenerateQR userData={userData}/>
+              <VolunteerDetails userData={userData}/>
             </ProtectedRoute>
           ),
         },

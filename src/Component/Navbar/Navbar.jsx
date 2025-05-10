@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/Logo.png";
-
+import hiImg from '../../assets/groundhog.png'
 
 
 const Navbar = () => {
@@ -14,13 +14,12 @@ const Navbar = () => {
       className="navbar navbar-expand-lg navbar-light bg-white shadow-sm"
       style={{
         borderBottom: "1px solid rgba(33, 77, 151, 1)",
-        borderRadius: "0 0 10px 20px",
-        height: "80px",
-      }}
+        borderRadius: "0 0 10px 20px"
+        }}
     >
       <div className="container-fluid">
         <Link className="navbar-brand d-flex align-items-center" to="/">
-          <img src={logo} alt="Logo" className="p-4" style={{ width: "90%" }} />
+          <img src={logo} alt="Logo" className="px-4" style={{ width: "90%" }} />
         </Link>
 
         <button
@@ -65,6 +64,9 @@ const Navbar = () => {
             </li>
           </ul>
 
+          <div className="hiImg d-flex align-items-center">
+            <img src={hiImg} className=" pb-2 mx-2" style={{width:'50px'}} alt="" />
+          </div>
           <button
             className="btn fw-bold"
             style={{

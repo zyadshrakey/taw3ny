@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import Loader from '../Loader/Loader';
 
 function VolunteerInOpportunity() {
+
     let navigate= useNavigate()
     const handleGoBack=()=>{
         navigate(-1)
@@ -20,12 +22,11 @@ function VolunteerInOpportunity() {
 `;
 
   let [volunteer, setVolunteer]= useState([])
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   let [seacrchItem, setSearchItem]= useState('')
 
   async function displayVolunteer(){
-    setIsLoading(true)
     setError(null)
     let token= localStorage.getItem('userToken')
     let response= await axios.get('https://wezaa.runasp.net/Volunteer/opportunities'
@@ -34,11 +35,12 @@ function VolunteerInOpportunity() {
       }}
     ).then((response)=>{
       console.log(response.data);
-      
       setVolunteer(response.data)
+      setIsLoading(false)
     }).catch((error)=>{
       console.log(error);
       setError(error.response?.data?.message || error.message ||"Failed to show Volunteer Data")
+      setIsLoading(false)
       
     })
   }
@@ -72,21 +74,22 @@ function VolunteerInOpportunity() {
 
             <div className="p-4 d-flex flex-row align-items-center justify-content-end volunteerInput position-relative">
           <input className="py-1 px-4" style={{width:'500px', borderRadius:'4px', border:'1px solid rgba(167, 167, 167, 1)', paddingRight: '30px'}} 
-          type="text" placeholder="البحث" dir="rtl" onChange={(e)=>setSearchItem(e.target.value)}/>
+          type="text" placeholder="ابحث بالأسم" dir="rtl" onChange={(e)=>setSearchItem(e.target.value)}/>
           <i style={{color:'rgba(33, 77, 151, 1)',right:'25px', top:'50%', transform:'translateY(-50%)'}} className="fa-solid fa-magnifying-glass position-absolute px-1"></i>
         </div>
 
         <div className="p-4 volunteerTable ">
 
-
+              
                 {seacrchItem && (
-                    <div className="p-4 volunteerSearchResult">
+                  <>{isLoading ? <Loader/> :(<>
+                  <div className="p-4 volunteerSearchResult">
                         <h5 dir='rtl' className='text-danger flex-start'>نتائج البحث:</h5>
                         {filteredVolunteers.length > 0 ? (
                         <table className="table" dir="rtl">
                             <thead>
                             <tr className="table-info">
-                                <th>#</th>
+                                <th>فى الفرص</th>
                                 <th>الاسم</th>
                                 <th>النوع</th>
                                 <th>رقم الهاتف</th>
@@ -114,14 +117,16 @@ function VolunteerInOpportunity() {
                     ) : (
                     <p className="text-danger text-center">لا توجد نتائج مطابقة</p>
                     )}
-                </div>
+                </div></>)}</>
+                    
                 )}
+                
 
 
         <table className="table" dir="rtl">
             <thead>
               <tr className='table-secondary'>
-                <th>#</th>
+                <th>فى الفرص</th>
                 <th>الاسم</th>
                 <th>النوع</th>
                 <th>رقم الهاتف</th>
@@ -130,11 +135,12 @@ function VolunteerInOpportunity() {
               </tr>
             </thead>
               <tbody>
+              {isLoading?<Loader/>:(<>
                 {volunteer.length>0 ? 
                   ( volunteer.map((item,index)=>{
                     return (
                       <StyledRow className='py-2' onClick={() => handleRowClick(item.id)} key={item.id}>
-                          <td className="">{index}</td>
+                          <td className="table-secondary">{index}</td>
                           <td>{item.fullName || <span className="text-danger">N/A</span>}</td>
                           <td>{item.gender ||  <span className="text-danger">N/A</span>}</td>
                           <td>{item.phoneNumber ||  <span className="text-danger">N/A</span>}</td>
@@ -150,6 +156,8 @@ function VolunteerInOpportunity() {
                         </td>
                     </tr> 
                 }
+                </>)}
+               
               </tbody>
 
            

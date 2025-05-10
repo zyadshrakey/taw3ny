@@ -83,7 +83,7 @@ const ResetPassword = () => {
 
   return (
     <div className="d-flex w-100 h-100 flex-md-row flex-column justify-content-center">
-      <div className="row w-100 h-100">
+      <div className="row w-100 h-100 flex-column-reverse flex-md-row">
         <div className="col-md-6 h-100 px-5 d-flex justify-content-center">
           <div>
             <ConfigProvider theme={Theme}>
@@ -175,7 +175,7 @@ const ResetPassword = () => {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  className="btn w-100 mt-2"
+                  className="btn w-100 my-2"
                   style={{
                     backgroundColor: "#214D97",
                     color: "white",
@@ -337,7 +337,7 @@ const ResetPassword = () => {
 
         <div
           style={{ backgroundColor: "#214D97" }}
-          className="col-md-6 vh-100 me-0 d-flex align-items-center justify-content-center"
+          className="col-md-6 p-0 vh-100 me-0 d-flex align-items-center justify-content-center"
         >
           <img
             src={getImageForStep()}

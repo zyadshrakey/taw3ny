@@ -79,7 +79,7 @@ function Login({saveUserData}) {
 
   return (
     <>
-      <div className="d-flex w-100 flex-md-row flex-column justify-content-between">
+      <div className="d-flex w-100 flex-md-row flex-column-reverse justify-content-between">
         <div
           className="flex-column p-4 w-100"
           style={{ textAlign: "center", margin: "auto" }}

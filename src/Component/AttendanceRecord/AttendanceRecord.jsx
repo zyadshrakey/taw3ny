@@ -128,29 +128,6 @@ function AttendanceRecord() {
             </div>
         </Modal>
 
-
-      {/* <Modal show={show} onHide={handleClose}>
-        <div className='d-flex flex-column align-align-items-center h-100 p-3'>
-
-          <div className='qrBtn container d-flex align-item-center justify-content-center'>
-              <button className='py-2 px-3' style={{backgroundColor:'rgba(33, 77, 151, 1)', color:'white', border:'none', borderRadius:'8px' }}
-                  onClick={()=>{generatQr()}}>
-                    إنشاء رمز الاستجابة السريعة
-              </button>
-          </div>
-
-          {qrCode && (
-          <div className="mt-4 p-2 d-flex justify-content-center">
-            <img src={qrCode}  alt="QR Code" style={{ width: '300px', height: '300px' }} />
-          </div>
-          )}
-          
-
-        </div>
-      </Modal> */}
-
-
-
         <div className=" p-4 d-flex flex-row align-items-center justify-content-end volunteerInput position-relative" style={{width:'100%'}}>
             <input className="py-1 px-5" style={{ borderRadius:'4px', border:'1px solid rgba(167, 167, 167, 1)', width:'80%'}} 
             type="text" placeholder="البحث" dir="rtl" onChange={(e)=>setSearchItem(e.target.value)}/>

@@ -17,14 +17,19 @@ const Navbar = () => {
       }}
     >
       <div className="container-fluid">
-        <Link className="navbar-brand d-flex align-items-center" to="/">
-          <img
-            src={logo}
-            alt="Logo"
-            className="px-4"
-            style={{ width: "90%" }}
-          />
-        </Link>
+      <button
+            className="btn fw-bold"
+            style={{
+              padding: "0 20px",
+              height: "40px",
+              backgroundColor: "#214D97",
+              color: "#fff",
+              borderRadius: "8px",
+            }}
+            onClick={handleLogout}
+          >
+            تسجيل خروج
+          </button>
 
         <button
           className="navbar-toggler"
@@ -40,11 +45,11 @@ const Navbar = () => {
 
         <div className="collapse navbar-collapse" id="navbarContent">
           <ul className="navbar-nav mx-auto mb-2 mb-lg-0 fs-5 fw-bold">
-            {/* <li style={{fontWeight:'400', fontSize:'18px'}} className="nav-item">
+            <li style={{fontWeight:'400', fontSize:'18px'}} className="nav-item">
               <Link className="nav-link" to="/attentancerecord">
                 سجل الحضور
               </Link>
-            </li> */}
+            </li>
             <li
               style={{ fontWeight: "400", fontSize: "18px" }}
               className="nav-item"
@@ -87,19 +92,14 @@ const Navbar = () => {
               alt=""
             />
           </div>
-          <button
-            className="btn fw-bold"
-            style={{
-              padding: "0 20px",
-              height: "40px",
-              backgroundColor: "#214D97",
-              color: "#fff",
-              borderRadius: "8px",
-            }}
-            onClick={handleLogout}
-          >
-            تسجيل خروج
-          </button>
+          <Link className="navbar-brand d-flex align-items-center" to="/">
+          <img
+            src={logo}
+            alt="Logo"
+            className="px-4"
+            style={{ width: "90%" }}
+          />
+        </Link>
         </div>
       </div>
     </nav>

@@ -83,24 +83,9 @@ function App() {
             </ProtectedRoute>
           ),
         },
-        // {
-        //   path: "volunteercharity",
-        //   element: (
-        //     <ProtectedRoute>
-        //       <VolunteerCharity userData={userData} />
-        //     </ProtectedRoute>
-        //   ),
-        // },
+        
         {
-          path: "attentancetable",
-          element: (
-            <ProtectedRoute>
-              <AttendanceTable userData={userData} />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "volunteerdetails/:id",
+          path: "attentancerecord",
           element: (
             <ProtectedRoute>
               <AttendanceRecord userData={userData} />

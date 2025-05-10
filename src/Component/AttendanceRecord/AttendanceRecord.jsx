@@ -12,7 +12,7 @@ function AttendanceRecord() {
   const handleShow = () => setShow(true);
   const navigate = useNavigate();
   let [attentance, setAttentance] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   let [error, setError] = useState(null);
   let [searchItem, setSearchItem] = useState("");
   let token = localStorage.getItem("userToken");
@@ -23,8 +23,8 @@ function AttendanceRecord() {
   };
 
   async function getAttentance() {
-    let response = await axios
-      .get("https://wezaa.runasp.net/Attendance/charity?page=1&pageSize=10", {
+    setIsLoading(true);
+    let response = await axios.get("https://wezaa.runasp.net/Attendance/charity?page=1&pageSize=10", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -32,6 +32,7 @@ function AttendanceRecord() {
       .then((response) => {
         console.log(response.data.attendances);
         setAttentance(response.data.attendances);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.log(error);
@@ -40,6 +41,7 @@ function AttendanceRecord() {
             error.message ||
             "Failed to show Volunteer Data"
         );
+        setIsLoading(false);
       });
   }
 
@@ -151,35 +153,35 @@ function AttendanceRecord() {
                 </div>
               )}
             </div>
-        </Modal>
+          </Modal>
 
 
-      {/* <Modal show={show} onHide={handleClose}>
-        <div className='d-flex flex-column align-align-items-center h-100 p-3'>
-
-          <div className='qrBtn container d-flex align-item-center justify-content-center'>
-              <button className='py-2 px-3' style={{backgroundColor:'rgba(33, 77, 151, 1)', color:'white', border:'none', borderRadius:'8px' }}
-                  onClick={()=>{generatQr()}}>
-                    إنشاء رمز الاستجابة السريعة
-              </button>
+          <div
+            className=" p-4 d-flex flex-row align-items-center justify-content-end volunteerInput position-relative"
+            style={{ width: "100%" }}
+          >
+            <input
+              className="py-1 px-5"
+              style={{
+                borderRadius: "4px",
+                border: "1px solid rgba(167, 167, 167, 1)",
+                width: "80%",
+              }}
+              type="text"
+              placeholder="البحث"
+              dir="rtl"
+              onChange={(e) => setSearchItem(e.target.value)}
+            />
+            <i
+              style={{
+                color: "rgba(33, 77, 151, 1)",
+                right: "25px",
+                top: "50%",
+                transform: "translateY(-50%)",
+              }}
+              className="fa-solid fa-magnifying-glass position-absolute px-1"
+            ></i>
           </div>
-
-          {qrCode && (
-          <div className="mt-4 p-2 d-flex justify-content-center">
-            <img src={qrCode}  alt="QR Code" style={{ width: '300px', height: '300px' }} />
-          </div>
-          )}
-          
-
-        </div>
-      </Modal> */}
-
-
-
-        <div className=" p-4 d-flex flex-row align-items-center justify-content-end volunteerInput position-relative" style={{width:'100%'}}>
-            <input className="py-1 px-5" style={{ borderRadius:'4px', border:'1px solid rgba(167, 167, 167, 1)', width:'80%'}} 
-            type="text" placeholder="البحث" dir="rtl" onChange={(e)=>setSearchItem(e.target.value)}/>
-            <i style={{color:'rgba(33, 77, 151, 1)',right:'25px', top:'50%', transform:'translateY(-50%)'}} className="fa-solid fa-magnifying-glass position-absolute px-1"></i>
         </div>
 
         {searchItem && (
@@ -192,13 +194,21 @@ function AttendanceRecord() {
                 <thead>
                   <tr className="table-primary table-borderless text-center">
                     <th>الاسم</th>
-                    <th>الوقت</th>
-                    <th>التاريخ</th>
+                    <th>وقت الحضور</th>
+                    <th>وقت الانصراف</th>
+                    <th>مدة التواجد</th>
                     <th>الحالة</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredVolunteers.map((item, index) => (
+                {isLoading? (
+                                <tr>
+                                <td colSpan="5" className="text-center py-3">
+                                    <Loader />
+                                </td>
+                                </tr>
+                            ):(<>
+                    {filteredVolunteers.map((item, index) => (
                     <tr className="py-2 text-center" key={item.id || index}>
                       <td>
                         {item.volunteerName || (
@@ -211,19 +221,25 @@ function AttendanceRecord() {
                         )}
                       </td>
                       <td>
-                        {item.checkInTime || (
+                        {item.checkOutTime|| (
+                          <span className="text-danger">N/A</span>
+                        )}
+                      </td>
+                      <td>
+                        {item.duration|| (
                           <span className="text-danger">N/A</span>
                         )}
                       </td>
                       <td>
                       {item.status? item.status == "Active"
-                            ? "حاضر"
-                            : "غائب" :
+                            ? "متواجد"
+                            : "غير متواجد" :
                                 <span className="text-danger">N/A</span>
                               }
                       </td>
                     </tr>
                   ))}
+                      </>)}
                 </tbody>
               </table>
             ) : (
@@ -239,13 +255,21 @@ function AttendanceRecord() {
                 <thead>
                   <tr className="table-primary table-borderless text-center">
                     <th>الاسم</th>
-                    <th>الوقت</th>
-                    <th>التاريخ</th>
+                    <th>وقت الحضور</th>
+                    <th>وقت الانصراف</th>
+                    <th>مدة التواجد</th>
                     <th>الحالة</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {attentance &&
+                {isLoading?(
+                                <tr>
+                                <td colSpan="5" className="text-center py-3">
+                                    <Loader />
+                                </td>
+                                </tr>
+                            ):(<>
+                             {attentance &&
                     attentance.map((item, index) => (
                       <tr className="py-2 text-center" key={item.id || index}>
                         <td>
@@ -254,24 +278,31 @@ function AttendanceRecord() {
                           )}
                         </td>
                         <td>
-                          {item.checkInTime || (
-                            <span className="text-danger">N/A</span>
-                          )}
-                        </td>
-                        <td>
-                          {item.checkInTime || (
-                            <span className="text-danger">N/A</span>
-                          )}
-                        </td>
+                        {item.checkInTime || (
+                          <span className="text-danger">N/A</span>
+                        )}
+                      </td>
+                      <td>
+                        {item.checkOutTime|| (
+                          <span className="text-danger">N/A</span>
+                        )}
+                      </td>
+                      <td>
+                        {item.duration|| (
+                          <span className="text-danger">N/A</span>
+                        )}
+                      </td>
                         <td>
                           {item.status? item.status == "Active"
-                            ? "حاضر"
-                            : "غائب" :
+                            ? "متواجد"
+                            : "غير متواجد" :
                                 <span className="text-danger">N/A</span>
                               }
                         </td>
                       </tr>
                     ))}
+                    </>)}
+                 
                 </tbody>
               </table>
             </div>

@@ -63,7 +63,7 @@ const VolunteerOpportunities = () => {
 
   const openModal = (opportunity = null) => {
     setEditingOpportunity(opportunity);
-    setImagePreview(opportunity?.pictureUrl);
+    setImagePreview(opportunity?.OpportunityPicture);
     form.resetFields();
     if (opportunity) {
       form.setFieldsValue({

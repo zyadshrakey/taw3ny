@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { message } from "antd";
 import {
   getProfileInfo,
   updateProfileInfo,
   deleteProfile,
+  updatePhoto,
 } from "../../Apis/profile";
 import { Interceptor } from "../../Apis/interceptor";
+import Loader from "../Loader/Loader";
+import { EditOutlined } from "@ant-design/icons";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     Interceptor();
@@ -50,6 +54,19 @@ const Profile = () => {
     }
   };
 
+  const handleEditPhoto = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      await updatePhoto(file);
+      message.success("تم تحديث صورة الملف الشخصي بنجاح!");
+      fetchProfile();
+    } catch (err) {
+      message.error("فشل في تحديث صورة الملف الشخصي");
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProfile((prevProfile) => ({
@@ -58,24 +75,53 @@ const Profile = () => {
     }));
   };
 
-  if (loading) return <div className="text-center py-5">جاري التحميل...</div>;
+  if (loading)
+    return (
+      <div className="text-center py-5">
+        <Loader />
+      </div>
+    );
   if (error) return <div className="text-center py-5 text-danger">{error}</div>;
 
   return (
     <div className="container mt-3">
       <div className="card shadow">
-        <div className="card-body">
-          {/* Profile Picture */}
-          <div className="text-center mb-4">
+        <div className="card-body" dir="rtl">
+          <div
+            className="position-relative text-center mb-4"
+            style={{ width: "150px", height: "150px", margin: "auto" }}
+          >
             <img
               src={profile?.pictureUrl}
               alt="Profile"
-              className="img-thumbnail rounded-circle"
-              style={{ width: "150px", height: "150px" }}
+              className="img-thumbnail rounded-circle w-100 h-100"
+              style={{ objectFit: "cover" }}
             />
+            <input
+              name="Picture"
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              onChange={handleEditPhoto}
+              style={{ display: "none" }}
+            />
+            <div
+              className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+              style={{
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                borderRadius: "50%",
+                opacity: 0,
+                transition: "opacity 0.3s",
+                cursor: "pointer",
+              }}
+              onClick={() => fileInputRef.current.click()}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = 1)}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = 0)}
+            >
+              <EditOutlined style={{ fontSize: "24px", color: "#fff" }} />
+            </div>
           </div>
 
-          {/* Profile Fields */}
           <div className="row">
             <div className="col-md-6 mb-3">
               <label className="form-label">الاسم الكامل:</label>
@@ -197,21 +243,26 @@ const Profile = () => {
               />
             </div>
           </div>
-
-          {/* Action Buttons */}
           <div className="d-flex justify-content-between mt-4">
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className="btn btn-primary"
+              className="btn text-white"
+              style={{ backgroundColor: "#214D97" }}
             >
               {isEditing ? "إلغاء التعديل" : "تعديل الملف الشخصي"}
             </button>
             {isEditing && (
-              <button onClick={handleUpdateProfile} className="btn btn-success">
+              <button
+                onClick={handleUpdateProfile}
+                className="btn btn-outline-success"
+              >
                 حفظ التعديلات
               </button>
             )}
-            <button onClick={handleDeleteProfile} className="btn btn-danger">
+            <button
+              onClick={handleDeleteProfile}
+              className="btn btn-outline-danger"
+            >
               حذف الملف الشخصي
             </button>
           </div>

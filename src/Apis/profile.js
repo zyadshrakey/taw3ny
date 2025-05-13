@@ -29,3 +29,14 @@ export const deleteProfile = async () => {
   const response = await axios.delete(`${baseUrl}/profile`);
   return response;
 };
+
+export const updatePhoto = async (file) => {
+  const formData = new FormData();
+  formData.append("Picture", file);
+
+  return axios.put(`${baseUrl}/Profile/picture`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};

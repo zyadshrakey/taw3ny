@@ -2,7 +2,7 @@ import React from 'react'
 
 function Home() {
     return <>
-    <main style={{ backgroundColor:'rgba(241, 241, 241, 1)', gridTemplateColumns:'2fr 2fr'}} className='p-5 w-100 d-flex flex-md-row justify-content-center '>
+    <main style={{ backgroundColor:'rgba(241, 241, 241, 1)', gridTemplateColumns:'2fr 2fr'}} className='p-5 w-100 d-flex flex-column flex-md-row justify-content-center align-content-center align-items-center'>
         <div>
             <div className=' main-info d-flex flex-column align-items-center text-center'>
                 <div className="title">
@@ -23,8 +23,10 @@ function Home() {
         </div>
     </main>
 
-    <section className='p-3 w-100 d-flex flex-column ' 
-    style={{backgroundColor:'#E8D6D4', height:'400px'}} >
+    {/* ////////////////////////////////////////////////////////////////////////////////////// */}
+
+    <section className='p-3 w-100 d-flex flex-column text-center' 
+    style={{backgroundColor:'#E8D6D4'}} >
         <div className="mb-3 sec-head d-flex flex-column justify-content-center align-items-center">
             <div className="title"><h1 style={{fontWeight:'400', fontSize:'35px'}}>نحن نساعدكم فى تقديم الدعم </h1></div>
             <div className="more"><span style={{fontWeight:'400', fontSize:'20px'}}>انضموا الينا في تعزيز المبادرات الخيرية ودعم المجتمعات </span></div>
@@ -141,13 +143,13 @@ function Home() {
 
     {/* /////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
 
-    <section style={{backgroundColor:'#F5F5F5', padding:'80px'}} className='d-flex flex-md-row flex-column juatify-content-center align-items-center gap-3'>
-            <div className="info px-5 d-flex flex-column juatify-content-center">
+    <section style={{backgroundColor:'#F5F5F5'}} className='d-flex flex-md-row flex-column juatify-content-center align-items-center gap-2 py-5 px-2'>
+            <div className="info px-5 d-flex flex-column align-items-center juatify-content-center text-center w-100" >
                 <h2 style={{fontWeight:'400', fontSize:'50px'}}>رسالة فريق طوعني</h2>
                 <p style={{fontWeight:'450', fontSize:'24px', textShadow:'2px 2px 2px #00000040'}}>شاهد كيف تعمل معاً لتحقيق أهدافنا التطوعية ودعم القضايا المجتمعية</p>
             </div>
             <div className='img'>
-                <video src={`video.mp4`} width={'527px'} controls></video>
+                <video src={`video.mp4`} width={'100%'} controls autoPlay muted></video>
             </div>
     </section>
 
@@ -155,7 +157,7 @@ function Home() {
 
     <section style={{backgroundColor:'#DEDEDE'}} className='d-flex flex-md-row flex-column juatify-content-center align-items-center gap-5 p-5'>
             <div className="img-contact">
-                <img className='labImg' src={`/Group 4.png`} alt="grup4img" width={'527px'} />
+                <img className='labImg' src={`/Group 4.png`} alt="grup4img" width={'100%'} />
             </div>
             <div className="contact d-flex flex-column justify-content-center align-items-center gap-3">
                 <h2 style={{fontWeight:'400', fontSize:'40px', textAlign:'center'}}>تواصل معنا وانضم لفريقنا</h2>
@@ -203,15 +205,34 @@ function Home() {
                 <p style={{fontSize:'20px', fontWeight:'400'}}>سياسات الخصوصيه</p>
             </div>
 
-            <div className="input">
-                <p style={{fontSize:'20px', fontWeight:'400', textAlign:'right', color:'#FFFFFF'}}>اتصل بنا</p>
-                <div style={{position:'absolute', color:'#F5F5F5',right:'54px', lineHeight:'45px'}} className="ico">
-                    <i className="fa-regular fa-envelope"></i>
+            <div className="input w-100" style={{ maxWidth: '300px' }}>
+                <p style={{fontSize:'20px', fontWeight:'400', textAlign:'right', color:'#FFFFFF'}}>
+                    اتصل بنا
+                </p>
+                <div className='position-relative w-100'>
+                        <i className="fa-regular fa-envelope position-absolute"
+                            style={{ 
+                            color: '#F5F5F5',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            right: '15px', // adjust if using LTR
+                            zIndex: '1',}}>
+                        </i>
+                    <input className='w-100'
+                    style={{
+                        border:'1px solid #F5F5F5', 
+                        borderRadius:'16px', 
+                        backgroundColor:'transparent', 
+                        color:'white', 
+                        padding:'10px 45px 10px 15px'
+                    }} 
+                    type="email" 
+                    name='email' 
+                    placeholder='البريد الكترونى' 
+                    dir='rtl'/>
                 </div>
-                <input style={{border:'1px solid #F5F5F5', borderRadius:'16px', backgroundColor:'transparent', color:'white', padding:'10px 25px'}} type="email" name='email' placeholder='البريد الكترونى' dir='rtl'/>
-
-                
             </div>
+            
     </footer>
     </>
 }

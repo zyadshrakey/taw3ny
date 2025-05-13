@@ -37,6 +37,7 @@ body {
   background-image: url("../public/signup1.jpeg");
   background-position: center;
   background-size: cover;
+  min-height: 100dvh;
   width: 50%;
 }
 .login-img {
@@ -47,9 +48,9 @@ body {
   width: 50%;
 }
 main .img-box .imgGround{
-  width: 500px;
+  width: 400px;
   height: 500px;
-  background-position: 'center';
+  background-position: center;
   background-size: cover;
   animation-name: mainBackground;
   animation-duration: 5s;
@@ -76,15 +77,20 @@ main .img-box .imgGround{
   animation-name: labImgMove;
   animation-duration: 5s;
   position: relative;
+  animation-fill-mode: both;
   animation-iteration-count: 1;
-  animation-delay: 5s;
+  animation-delay: 1s;
+  transition: all 0.2 ease;
 }
 @keyframes labImgMove{
   0%{
-    left: -50%;
+    opacity: 0;
+    transform: translateX(-20px);
   }
   100%{
-    left: 20px;
+    opacity: 1;
+    transform: translateX(20px);
+
   }
 }
 
@@ -94,4 +100,24 @@ main .img-box .imgGround{
 }
 .detailBtn:hover{
   box-shadow: 0px 3px 5px 2px rgb(35, 78, 152);
+}
+.hiImg{
+  animation: hiImgMove 5s ease-out forwards;
+}
+@keyframes hiImgMove{
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+    transform: translateX(10px);
+  }
+  50%{
+    opacity: 1;
+    transform: translateY(0);
+    transform: translateX(-10px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20px);
+    transform: translateX(10px);
+  }
 }

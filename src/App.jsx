@@ -39,7 +39,7 @@ function App() {
           path: "/",
           element: (
             <ProtectedRoute>
-              <Home />
+              <Profile userData={userData} />
             </ProtectedRoute>
           ),
         },
@@ -67,14 +67,7 @@ function App() {
             </ProtectedRoute>
           ),
         },
-        {
-          path: "profile",
-          element: (
-            <ProtectedRoute>
-              <Profile userData={userData} />
-            </ProtectedRoute>
-          ),
-        },
+       
         {
           path: "volunteerinopportunity",
           element: (

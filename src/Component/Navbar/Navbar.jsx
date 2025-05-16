@@ -78,7 +78,7 @@ const Navbar = () => {
               style={{ fontWeight: "400", fontSize: "18px" }}
               className="nav-item"
             >
-              <Link className="nav-link" to="/profile">
+              <Link className="nav-link" to="/">
                 ملف المؤسسة
               </Link>
             </li>

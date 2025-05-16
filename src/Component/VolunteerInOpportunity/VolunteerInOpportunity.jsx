@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import Loader from '../Loader/Loader';
+import Table from '../Table/Table';
 
 function VolunteerInOpportunity() {
 
@@ -13,6 +14,15 @@ function VolunteerInOpportunity() {
         navigate(-1)
       }
 
+      const columns = [
+        'فى الفرص',
+        'الاسم',
+        'النوع',
+        'رقم الهاتف',
+        'البلد',
+        'ساعات التطوع',
+      ];
+
     const StyledRow = styled.tr`
   cursor: pointer;
   
@@ -20,6 +30,21 @@ function VolunteerInOpportunity() {
     text-decoration: underline;
   }
 `;
+
+
+const renderRow = (item, index) => (
+  <StyledRow className="py-2" onClick={() => handleRowClick(item.id)} key={item.id}>
+    <td className='py-3'>{index}</td>
+    <td className='py-3'>{item.fullName || <span className="text-danger">N/A</span>}</td>
+    <td className='py-3'>{item.gender || <span className="text-danger">N/A</span>}</td>
+    <td className='py-3'>{item.phoneNumber || <span className="text-danger">N/A</span>}</td>
+    <td className='py-3'>{item.city || <span className="text-danger">N/A</span>}</td>
+    <td className='py-3'> 
+      <i className="text-primary fa-solid fa-clock"></i>{' '}
+      {item.volunteerHours || <span className="text-danger">N/A</span>}
+    </td>
+  </StyledRow>
+);
 
   let [volunteer, setVolunteer]= useState([])
   const [isLoading, setIsLoading] = useState(true);
@@ -84,38 +109,17 @@ function VolunteerInOpportunity() {
                 {seacrchItem && (
                   <>{isLoading ? <Loader/> :(<>
                   <div className="p-4 volunteerSearchResult">
-                        <h5 dir='rtl' className='text-danger flex-start'>نتائج البحث:</h5>
+                        <h5 dir='rtl' className=' flex-start'>نتائج البحث:</h5>
                         {filteredVolunteers.length > 0 ? (
-                        <table className="table" dir="rtl">
-                            <thead>
-                            <tr className="table-info">
-                                <th>فى الفرص</th>
-                                <th>الاسم</th>
-                                <th>النوع</th>
-                                <th>رقم الهاتف</th>
-                                <th>البلد</th>
-                                <th>ساعات التطوع</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {filteredVolunteers.map((item, index) => (
-                                <StyledRow className="py-2" onClick={() => handleRowClick(item.id)} key={item.id}>
-                                <td>{index + 1}</td>
-                                <td>{item.fullName || <span classN
-                                
-                                ame="text-danger">N/A</span>}</td>
-                                <td>{item.gender || <span className="text-danger">N/A</span>}</td>
-                                <td>{item.phoneNumber ||
-                                
-                                <span className="text-danger">N/A</span>}</td>
-                                <td>{item.city || <span className="text-danger">N/A</span>}</td>
-                                <td><i className="text-primary fa-solid fa-clock"></i> {item.volunteerHours || <span className="text-danger">N/A</span>}</td>
-                                </StyledRow>
-                            ))}
-                        </tbody>
-                    </table>
+                        <Table
+                        columns={columns}
+                        data={filteredVolunteers}
+                        renderRow={(item, i) => renderRow(item, i)}
+                        isLoading={false}
+                        emptyMessage="لا توجد نتائج مطابقة"
+                      />
                     ) : (
-                    <p className="text-danger text-center">لا توجد نتائج مطابقة</p>
+                    <p className="text-danger text-center" style={{fontSize:'20px'}}>لا توجد نتائج مطابقة</p>
                     )}
                 </div></>)}</>
                     
@@ -123,45 +127,13 @@ function VolunteerInOpportunity() {
                 
 
 
-        <table className="table" dir="rtl">
-            <thead>
-              <tr className='table-secondary'>
-                <th>فى الفرص</th>
-                <th>الاسم</th>
-                <th>النوع</th>
-                <th>رقم الهاتف</th>
-                <th>البلد</th>
-                <th>ساعات التطوع</th>
-              </tr>
-            </thead>
-              <tbody>
-              {isLoading?<Loader/>:(<>
-                {volunteer.length>0 ? 
-                  ( volunteer.map((item,index)=>{
-                    return (
-                      <StyledRow className='py-2' onClick={() => handleRowClick(item.id)} key={item.id}>
-                          <td className="table-secondary">{index}</td>
-                          <td>{item.fullName || <span className="text-danger">N/A</span>}</td>
-                          <td>{item.gender ||  <span className="text-danger">N/A</span>}</td>
-                          <td>{item.phoneNumber ||  <span className="text-danger">N/A</span>}</td>
-                          <td>{item.city ||  <span className="text-danger">N/A</span>}</td>
-                          <td><i className="text-primary fa-solid fa-clock"></i> {item.volunteerHours ||  <span className="text-danger">N/A</span>}</td>                        
-                      </StyledRow>
-                        
-                    )
-                  })):
-                    <tr>
-                        <td colSpan={6} className="text-center text-danger"> 
-                            <h3>لا يوجد متطوعين</h3>
-                        </td>
-                    </tr> 
-                }
-                </>)}
-               
-              </tbody>
-
-           
-          </table>
+                <Table
+                      columns={columns}
+                      data={volunteer}
+                      renderRow={(item, i) => renderRow(item, i)}
+                      isLoading={isLoading}
+                      emptyMessage="لا يوجد متطوعين"
+                    />
 
        
         </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { message } from "antd";
+import { message, Modal } from "antd";
 import {
   getProfileInfo,
   updateProfileInfo,
@@ -8,7 +8,7 @@ import {
 } from "../../Apis/profile";
 import { Interceptor } from "../../Apis/interceptor";
 import Loader from "../Loader/Loader";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
@@ -47,8 +47,17 @@ const Profile = () => {
 
   const handleDeleteProfile = async () => {
     try {
-      await deleteProfile();
-      message.success("تم حذف الملف الشخصي بنجاح!");
+      Modal.confirm({
+        title: "حذف الملف الشخصي",
+        content: "هل أنت متأكد من حذف الملف الشخصي؟",
+        okText: "نعم",
+        okType: "danger",
+        cancelText: "لا",
+        onOk: () => {
+          deleteProfile();
+          message.success("تم حذف الملف الشخصي بنجاح!");
+        },
+      });
     } catch (err) {
       message.error("فشل في حذف الملف الشخصي");
     }
@@ -86,7 +95,16 @@ const Profile = () => {
   return (
     <div className="container mt-3">
       <div className="card shadow">
-        <div className="card-body" dir="rtl">
+        <div className="card-body position-relative" dir="rtl">
+          <button
+            onClick={handleDeleteProfile}
+            className="btn btn-outline-danger position-absolute"
+            style={{ top: "10px", left: "10px", zIndex: 10 }}
+            title="حذف الملف الشخصي"
+          >
+            <DeleteOutlined />
+          </button>
+
           <div
             className="position-relative text-center mb-4"
             style={{ width: "150px", height: "150px", margin: "auto" }}
@@ -191,7 +209,6 @@ const Profile = () => {
                 onChange={handleInputChange}
                 className="form-control"
                 readOnly={!isEditing}
-                rows="3"
               />
             </div>
 
@@ -243,28 +260,19 @@ const Profile = () => {
               />
             </div>
           </div>
-          <div className="d-flex justify-content-between mt-4">
+          <div className=" mt-4">
             <button
-              onClick={() => setIsEditing(!isEditing)}
-              className="btn text-white"
-              style={{ backgroundColor: "#214D97" }}
+              onClick={() => setIsEditing((prev) => !prev)}
+              className="btn text-white ms-2"
+              style={{ backgroundColor: isEditing ? "#dc3545" : "#214D97" }}
             >
-              {isEditing ? "إلغاء التعديل" : "تعديل الملف الشخصي"}
+              {isEditing ? "حذف التعديلات" : "تعديل بيانات المؤسسة"}
             </button>
             {isEditing && (
-              <button
-                onClick={handleUpdateProfile}
-                className="btn btn-outline-success"
-              >
+              <button onClick={handleUpdateProfile} className="btn btn-success">
                 حفظ التعديلات
               </button>
             )}
-            <button
-              onClick={handleDeleteProfile}
-              className="btn btn-outline-danger"
-            >
-              حذف الملف الشخصي
-            </button>
           </div>
         </div>
       </div>

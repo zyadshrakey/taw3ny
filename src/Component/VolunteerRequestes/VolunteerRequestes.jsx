@@ -82,7 +82,7 @@ function VolunteerRequests() {
             >
               <div className="card shadow border-0 rounded-3 overflow-hidden h-100">
                 <div
-                  className="card-img-top mt-2"
+                  className="card-img-top"
                   style={{ height: "120px", overflow: "hidden" }}
                 >
                   <img
@@ -114,11 +114,23 @@ function VolunteerRequests() {
 
                   <div className="d-flex gap-2 mt-auto">
                     <button
-                      className="btn text-white py-1 px-2"
+                      className="btn py-1 px-2"
                       style={{
                         backgroundColor: "#214D97",
                         fontSize: "0.9rem",
                         flex: 1,
+                        color: "#F5F5F5",
+                        border: "2px solid #214D97",
+                        borderRadius: "8px",
+                        transition: "all 0.3s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = "#FFFFFF";
+                        e.currentTarget.style.color = "#214D97";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = "#214D97";
+                        e.currentTarget.style.color = "#F5F5F5";
                       }}
                       onClick={() =>
                         handleAction(request.id, acceptApplication)

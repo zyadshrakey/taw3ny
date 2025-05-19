@@ -139,8 +139,17 @@ const VolunteerOpportunities = () => {
           style={{
             backgroundColor: "#214D97",
             color: "#F5F5F5",
-            border: "none",
+            border: "2px solid #214D97",
             borderRadius: "8px",
+            transition: "all 0.3s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#FFFFFF";
+            e.currentTarget.style.color = "#214D97";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "#214D97";
+            e.currentTarget.style.color = "#F5F5F5";
           }}
           onClick={() => openModal()}
         >
@@ -153,40 +162,82 @@ const VolunteerOpportunities = () => {
       <div className="container mx-auto" dir="rtl">
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-2 gx-4">
           {opportunities.map((opportunity) => (
-            <div key={opportunity.id} className="col d-flex flex-column">
-              <div className="p-3 border-0 bg-light shadow rounded-4">
-                <img
-                  src={opportunity.pictureUrl || avatar}
-                  alt={opportunity.title}
-                  className="card-img-top rounded-3"
-                  style={{ height: "110px", objectFit: "conatin" }}
-                />
+            <div
+              key={opportunity.id}
+              className="col"
+              style={{
+                transition: "transform 0.5s ease, box-shadow 0.5s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.firstChild.style.transform =
+                  "translateY(-5px) scale(1.02)";
+                e.currentTarget.firstChild.style.boxShadow =
+                  "0 6px 20px rgba(0, 0, 0, 0.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.firstChild.style.transform =
+                  "translateY(0) scale(1)";
+                e.currentTarget.firstChild.style.boxShadow =
+                  "0 0 8px rgba(0, 0, 0, 0.05)";
+              }}
+            >
+              <div className="card mt-3 shadow border-0 rounded-3 overflow-hidden h-100">
+                <div
+                  className="card-img-top"
+                  style={{ height: "120px", overflow: "hidden" }}
+                >
+                  <img
+                    src={opportunity.pictureUrl || avatar}
+                    alt={opportunity.title}
+                    className="w-100 h-100 object-fit-cover"
+                  />
+                </div>
 
-                <div className="d-flex flex-column pt-2">
-                  <h5 className="card-title text-center mb-1 text-truncate fw-bold">
+                <div className="d-flex flex-column p-2">
+                  <h5 className="card-title mb-1 text-truncate fw-bold">
                     {opportunity.title}
                   </h5>
 
-                  <p className="card-text text-center mb-1 text-truncate">
+                  <p className="card-text mb-1 text-truncate">
                     {opportunity.description || "لا يوجد وصف متاح"}
                   </p>
 
-                  <div className="d-flex flex-column align-items-center justify-content-between text-dark mb-3 small">
+                  <div className="d-flex flex-column justify-content-between text-dark mb-3 small">
                     <span>{opportunity.location}</span>
                     <span>{opportunity.category}</span>
                     <span>{opportunity.maxVolunteers} متطوع</span>
                   </div>
 
-                  <div className="d-flex justify-content-center gap-3">
+                  <div className="d-flex gap-2 mt-auto">
                     <button
-                      className="btn text-white"
-                      style={{ backgroundColor: "#214D97" }}
+                      className="btn py-1 px-2"
+                      style={{
+                        backgroundColor: "#214D97",
+                        fontSize: "0.9rem",
+                        flex: 1,
+                        color: "#F5F5F5",
+                        border: "2px solid #214D97",
+                        borderRadius: "8px",
+                        transition: "all 0.3s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = "#FFFFFF";
+                        e.currentTarget.style.color = "#214D97";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = "#214D97";
+                        e.currentTarget.style.color = "#F5F5F5";
+                      }}
                       onClick={() => openModal(opportunity)}
                     >
                       تعديل
                     </button>
                     <button
-                      className="btn btn-outline-danger"
+                      className="btn btn-outline-danger py-1 px-2"
+                      style={{
+                        fontSize: "0.9rem",
+                        flex: 1,
+                      }}
                       onClick={() => handleDelete(opportunity.id)}
                     >
                       حذف

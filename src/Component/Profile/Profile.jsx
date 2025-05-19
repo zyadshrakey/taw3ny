@@ -38,28 +38,28 @@ const Profile = () => {
     try {
       const response = await updateProfileInfo(profile);
       console.log(response);
-      message.success("تم تحديث الملف الشخصي بنجاح!");
+      message.success("تم تحديث بيانات المؤسسة بنجاح!");
       setIsEditing(false);
     } catch (err) {
-      message.error("فشل في تحديث الملف الشخصي");
+      message.error("فشل في تحديث بيانات المؤسسة");
     }
   };
 
   const handleDeleteProfile = async () => {
     try {
       Modal.confirm({
-        title: "حذف الملف الشخصي",
-        content: "هل أنت متأكد من حذف الملف الشخصي؟",
+        title: "حذف بيانات المؤسسة",
+        content: "هل أنت متأكد من حذف بيانات المؤسسة؟",
         okText: "نعم",
         okType: "danger",
         cancelText: "لا",
         onOk: () => {
           deleteProfile();
-          message.success("تم حذف الملف الشخصي بنجاح!");
+          message.success("تم حذف بيانات المؤسسة بنجاح!");
         },
       });
     } catch (err) {
-      message.error("فشل في حذف الملف الشخصي");
+      message.error("فشل في حذف بيانات المؤسسة");
     }
   };
 
@@ -69,10 +69,10 @@ const Profile = () => {
 
     try {
       await updatePhoto(file);
-      message.success("تم تحديث صورة الملف الشخصي بنجاح!");
+      message.success("تم تحديث صورة بيانات المؤسسة بنجاح!");
       fetchProfile();
     } catch (err) {
-      message.error("فشل في تحديث صورة الملف الشخصي");
+      message.error("فشل في تحديث صورة بيانات المؤسسة");
     }
   };
 
@@ -100,7 +100,7 @@ const Profile = () => {
             onClick={handleDeleteProfile}
             className="btn btn-outline-danger position-absolute"
             style={{ top: "10px", left: "10px", zIndex: 10 }}
-            title="حذف الملف الشخصي"
+            title="حذف بيانات المؤسسة"
           >
             <DeleteOutlined />
           </button>

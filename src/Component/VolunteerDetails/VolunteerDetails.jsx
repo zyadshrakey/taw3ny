@@ -1,15 +1,21 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import img from "../../assets/avatar2.jpg";
 import { message } from "antd";
 import { FaStar, FaRegStar, FaTrashAlt } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 function VolunteerDetails() {
+  const navigate= useNavigate()
+  const handleGoBack=()=>{
+    navigate(-1)
+  }
+
   let { id } = useParams();
   console.log("Volunteer Id:", id);
   let token = localStorage.getItem("userToken");
-  let [volunteerInfo, setVolunteerIfo] = useState([]);
+  let [volunteerInfo, setVolunteerInfo] = useState([]);
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
 
@@ -22,7 +28,7 @@ function VolunteerDetails() {
       })
       .then((response) => {
         console.log(response.data);
-        setVolunteerIfo(response.data);
+        setVolunteerInfo(response.data);
       })
       .catch((error) => console.log(error));
   }
@@ -49,7 +55,8 @@ function VolunteerDetails() {
     }
   };
 
-  const deleteVolunteer = async () => {
+  const deleteVolunteer = async (e) => {
+    e.preventDefault(); 
     try {
       const response = await axios.delete(
         `https://wezaa.runasp.net/Volunteer/${id}`,
@@ -58,7 +65,8 @@ function VolunteerDetails() {
         }
       );
       if (response.status === 200) {
-        message.success("تم حذف المتطوع بنجاح!");
+        toast.success("تم حذف المتطوع بنجاح!");
+        window.location.href = "/volunteer";
       } else {
         throw new Error("Failed to delete volunteer");
       }
@@ -75,6 +83,20 @@ function VolunteerDetails() {
   return (
     <>
       <div className="container">
+      <div className="volunteerBtn p-3" onClick={handleGoBack}>
+            <button
+              style={{
+                backgroundColor: "rgba(33, 77, 151, 1)",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                width: "79px",
+                height: "40px",
+              }}
+            >
+              <i className="fa-solid fa-arrow-left"></i> رجوع
+            </button>
+          </div>
         {volunteerInfo && (
           <div className="row ">
             <div className="col-md-5 d-flex flex-column align-items-center justify-content-center py-4">
@@ -311,7 +333,7 @@ function VolunteerDetails() {
                   <button
                     className="btn btn-outline-danger fw-bold px-3 rounded-2 "
                     style={{ borderRadius: "2px" }}
-                    onClick={() => deleteVolunteer()}
+                    onClick={deleteVolunteer}
                   >
                     <i class="fa-solid fa-trash-can"></i>
                     <span className="px-2">حذف المتطوع</span>

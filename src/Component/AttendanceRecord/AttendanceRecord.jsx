@@ -81,8 +81,8 @@ function AttendanceRecord() {
   return (
     <>
       <div className="d-flex flex-column">
-        <div className="d-flex p-4 flex-row justify-content-between">
-          <div className="volunteerBtn" onClick={handleGoBack}>
+        <div className="d-flex p-4 flex-row justify-content-end">
+          {/* <div className="volunteerBtn" onClick={handleGoBack}>
             <button
               style={{
                 backgroundColor: "rgba(33, 77, 151, 1)",
@@ -95,7 +95,7 @@ function AttendanceRecord() {
             >
               <i className="fa-solid fa-arrow-left"></i> رجوع
             </button>
-          </div>
+          </div> */}
           <div className="title">
             <h1>سجل الحضور</h1>
           </div>
@@ -105,18 +105,32 @@ function AttendanceRecord() {
           <Button
             variant="primary"
             onClick={handleShow}
-            className="w-25"
+            className="w-25 "
             style={{
-              backgroundColor: "rgba(33, 77, 151, 1)",
+              backgroundColor:'#EBEBEB',
               borderRadius: "8px",
-              boxShadow: "0 4px 8px 0 rgb(33, 77, 151)",
+              boxShadow: "0 4px 8px 0 rgb(137, 166, 211)",
               border: "none",
+              color:'black'
             }}
           >
             QR Code
           </Button>
 
           <Modal show={show} onHide={handleClose}>
+          <div className="volunteerBtn" onClick={handleClose}>
+            <button 
+            className="px-3 py-2"
+              style={{
+                color:'red',
+                border: "none",
+                borderRadius: "8px",
+                backgroundColor: "white"
+              }}
+            >
+              <i class="fa-solid fa-x"></i> 
+            </button>
+          </div>
             <div className="d-flex flex-column align-items-center h-100 p-3">
               <div className="qrBtn container d-flex align-items-center justify-content-center">
                 <button
@@ -184,7 +198,7 @@ function AttendanceRecord() {
           </div>
         </div>
 
-        {searchItem && (
+        {searchItem && searchItem.length>0 ? (
           <div className="p-2">
             <h5 dir="rtl" className="text-danger flex-start">
               نتائج البحث :{" "}
@@ -246,9 +260,8 @@ function AttendanceRecord() {
               <p className="text-danger text-center">لا توجد نتائج مطابقة</p>
             )}
           </div>
-        )}
-
-        <div className="volunteerBtn container d-flex flex-column align-item-center justify-content-center gap-5">
+        ):(
+          <div className="volunteerBtn container d-flex flex-column align-item-center justify-content-center gap-5">
           <div className="d-flex flex-column align-align-items-center">
             <div className="p-2">
               <table dir="rtl" className="table table-bordered">
@@ -308,6 +321,8 @@ function AttendanceRecord() {
             </div>
           </div>
         </div>
+        )}
+
       </div>
     </>
   );

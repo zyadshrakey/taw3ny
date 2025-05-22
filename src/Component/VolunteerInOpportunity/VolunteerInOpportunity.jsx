@@ -106,7 +106,7 @@ const renderRow = (item, index) => (
         <div className="p-4 volunteerTable ">
 
               
-                {seacrchItem && (
+                {seacrchItem && seacrchItem.length>0 ? (
                   <>{isLoading ? <Loader/> :(<>
                   <div className="p-4 volunteerSearchResult">
                         <h5 dir='rtl' className=' flex-start'>نتائج البحث:</h5>
@@ -123,17 +123,15 @@ const renderRow = (item, index) => (
                     )}
                 </div></>)}</>
                     
-                )}
-                
-
-
-                <Table
+                ):(<>
+                  <Table
                       columns={columns}
                       data={volunteer}
                       renderRow={(item, i) => renderRow(item, i)}
                       isLoading={isLoading}
                       emptyMessage="لا يوجد متطوعين"
                     />
+                </>)}
 
        
         </div>

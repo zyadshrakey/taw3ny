@@ -88,11 +88,11 @@ function Volunteer() {
     <>
       <div className="d-flex flex-column">
 
-            <div className="d-flex p-4 flex-row justify-content-between">
-                <div className="volunteerBtn" onClick={handleGoBack}>
+            <div className="d-flex p-4 flex-row justify-content-end">
+                {/* <div className="volunteerBtn" onClick={handleGoBack}>
                     <button style={{backgroundColor:'rgba(33, 77, 151, 1)', color:'white', border:'none', borderRadius:'8px' ,width:'79px', height:'40px'}}>
                     <i className="fa-solid fa-arrow-left"></i> رجوع
-                    </button></div>
+                    </button></div> */}
                 <div className="title">
                     <h1>ملف المتطوعين </h1>
                 </div>
@@ -113,7 +113,7 @@ function Volunteer() {
 
             <div className="p-4 volunteerTable">
 
-            {seacrchItem && (
+            {seacrchItem && seacrchItem.length >0 ? (
                     <div className="p-4 volunteerSearchResult">
                         <h5 className='text-end'>: نتائج البحث</h5>
                         {filteredVolunteers.length > 0 ? (
@@ -125,11 +125,12 @@ function Volunteer() {
                       emptyMessage="لا توجد نتائج مطابقة"
                     />
                         ) : (
+                        <>
                         <p className="text-danger text-center" style={{fontSize:'20px'}}>لا توجد نتائج مطابقة</p>
+                        </>
                         )}
                     </div>
-                    )}
-                    
+                    ):(<>
                     <table className="table table-striped rounded-2" dir='rtl'>
                     <Table
                       columns={columns}
@@ -139,6 +140,8 @@ function Volunteer() {
                       emptyMessage="لا يوجد متطوعين"
                     />
                     </table>
+                    </>)}
+                    
                     </div>
                     </div>
     </>

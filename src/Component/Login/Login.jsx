@@ -31,7 +31,7 @@ function Login({saveUserData}) {
         localStorage.setItem("userToken", data.token);
         saveUserData()
         console.log(data.message);
-        navigate("/");
+        navigate("/attentancerecord");
         setLoading(false);
       } else {
         setError(data.message);

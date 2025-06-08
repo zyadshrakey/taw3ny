@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 function Login({saveUserData}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false)
   let navigate = useNavigate();
 
   const [user, setUser] = useState({
@@ -131,8 +132,16 @@ function Login({saveUserData}) {
                 className="fas fa-key"
                 style={{ position: "absolute", right: "20px", bottom: "25px" }}
               ></i>
+              <i
+                id="showPass"
+                className={`fas ${
+                passwordVisible ? 'fa-eye-slash' : 'fa-eye'
+                }`}
+                onClick={() => setPasswordVisible(!passwordVisible)}
+                style={{ position: "absolute", left: "20px", bottom: "24px" , color:'gray' }}
+              ></i>
               <input
-                type="password"
+                type={passwordVisible ? 'text' : 'password'}
                 onChange={getUserData}
                 name="password"
                 placeholder="كلمة المرور"
@@ -154,6 +163,7 @@ function Login({saveUserData}) {
                 color: "white",
                 borderRadius: "24px",
                 height: "48px",
+                transition:'all .5s ease-in-out'
               }}
             >
               {loading === true ? (

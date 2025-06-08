@@ -7,6 +7,7 @@ import {
   rejectApplication,
 } from "../../Apis/requestes";
 import Loader from "../Loader/Loader";
+import { message } from "antd";
 
 function VolunteerRequests() {
   const [requestsData, setRequestsData] = useState([]);
@@ -32,9 +33,11 @@ function VolunteerRequests() {
   const handleAction = async (id, action) => {
     try {
       await action(id);
+      message.success("تمت العملية بنجاح");
       setRequestsData((prev) => prev.filter((req) => req.id !== id));
     } catch (error) {
       console.error("Error handling action:", error);
+      message.error("اعد تنفيذ العملية");
     }
   };
 
@@ -43,7 +46,7 @@ function VolunteerRequests() {
       className="container py-4"
       dir="rtl"
       style={{
-        minHeight: "80vh",
+        maxHeight: "90vh",
         overflowY: "auto",
         display: "flex",
         flexDirection: "column",
@@ -56,66 +59,100 @@ function VolunteerRequests() {
           <Loader />
         </div>
       ) : requestsData.length > 0 ? (
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 gap-2">
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3 justify-content-start">
           {requestsData.map((request) => (
             <div
               key={request.id}
-              className="card shadow-lg border-0 rounded-3 overflow-hidden"
-              style={{ height: "100%" }}
+              className="col"
+              style={{
+                transition: "transform 0.5s ease, box-shadow 0.5s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.firstChild.style.transition=
+                "all 0.3s ease"
+                e.currentTarget.firstChild.style.transform =
+                  "translateY(-5px) scale(1.02)";
+                e.currentTarget.firstChild.style.boxShadow =
+                  "0 6px 20px rgba(0, 0, 0, 0.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.firstChild.style.transform =
+                  "translateY(0) scale(1)";
+                e.currentTarget.firstChild.style.boxShadow =
+                  "0 0 8px rgba(0, 0, 0, 0.05)";
+              }}
             >
-              <div
-                className="card-img-top mt-2"
-                style={{ height: "120px", overflow: "hidden" }}
-              >
-                <img
-                  src={request.pictureUrl || avatar}
-                  alt={request.volunteerName}
-                  className="w-100 h-100 object-fit-cover"
-                />
-              </div>
+              <div className="card shadow border-0 rounded-3 overflow-hidden h-100">
+                <div
+                  className="card-img-top"
+                  style={{ height: "120px", overflow: "hidden" }}
+                >
+                  <img
+                    src={request.pictureUrl || avatar}
+                    alt={request.volunteerName}
+                    className="w-100 h-100 object-fit-cover"
+                  />
+                </div>
 
-              <div
-                className="card-body p-2 d-flex flex-column"
-                style={{ height: "calc(100% - 150px)" }}
-              >
-                <h5 className="card-title fw-bold mb-1 text-truncate">
-                  {request.volunteerName}
-                </h5>
-                <p className="card-text text-muted small mb-1">
-                  {request.volunteerEmail}
-                </p>
-                <p className="card-text text-muted small mb-1">
-                  {request.opportunityName}
-                </p>
-                <p className="card-text text-muted small mb-1">
-                  عدد المتطوعين: {request.totalVolunteerCount}
-                </p>
-                <p className="card-text text-muted small mb-2">
-                  {request.volunteerPhone}
-                </p>
+                <div
+                  className="card-body p-2 d-flex flex-column"
+                  style={{ height: "calc(100% - 150px)" }}
+                >
+                  <h5 className="card-title fw-bold mb-1 text-truncate">
+                    {request.volunteerName}
+                  </h5>
+                  <p className="card-text text-muted small mb-1">
+                    {request.volunteerEmail}
+                  </p>
+                  <p className="card-text text-muted small mb-1">
+                    {request.opportunityName}
+                  </p>
+                  <p className="card-text text-muted small mb-1">
+                    عدد المتطوعين: {request.totalVolunteerCount}
+                  </p>
+                  <p className="card-text text-muted small mb-2">
+                    {request.volunteerPhone}
+                  </p>
 
-                <div className="d-flex gap-2 mt-auto">
-                  <button
-                    className="btn text-white py-1 px-2"
-                    style={{
-                      backgroundColor: "#214D97",
-                      fontSize: "0.9rem",
-                      flex: 1,
-                    }}
-                    onClick={() => handleAction(request.id, acceptApplication)}
-                  >
-                    قبول
-                  </button>
-                  <button
-                    className="btn btn-outline-danger py-1 px-2"
-                    style={{
-                      fontSize: "0.9rem",
-                      flex: 1,
-                    }}
-                    onClick={() => handleAction(request.id, rejectApplication)}
-                  >
-                    رفض
-                  </button>
+                  <div className="d-flex gap-2 mt-auto">
+                    <button
+                      className="btn py-1 px-2"
+                      style={{
+                        backgroundColor: "#214D97",
+                        fontSize: "0.9rem",
+                        flex: 1,
+                        color: "#F5F5F5",
+                        border: "2px solid #214D97",
+                        borderRadius: "8px",
+                        transition: "all 0.3s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = "#FFFFFF";
+                        e.currentTarget.style.color = "#214D97";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = "#214D97";
+                        e.currentTarget.style.color = "#F5F5F5";
+                      }}
+                      onClick={() =>
+                        handleAction(request.id, acceptApplication)
+                      }
+                    >
+                      قبول
+                    </button>
+                    <button
+                      className="btn btn-outline-danger py-1 px-2"
+                      style={{
+                        fontSize: "0.9rem",
+                        flex: 1,
+                      }}
+                      onClick={() =>
+                        handleAction(request.id, rejectApplication)
+                      }
+                    >
+                      رفض
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

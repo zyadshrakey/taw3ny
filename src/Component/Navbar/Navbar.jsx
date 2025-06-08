@@ -2,11 +2,21 @@ import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/Logo.png";
 import hiImg from "../../assets/groundhog.png";
+import { Modal } from "antd";
 
 const Navbar = () => {
   function handleLogout() {
-    localStorage.clear();
-    window.location.reload();
+    Modal.confirm({
+      title: "تسجيل الخروج",
+      content: "هل أنت متأكد من تسجيل الخروج؟",
+      okText: "نعم",
+      okType: "danger",
+      cancelText: "لا",
+      onOk: () => {
+        localStorage.clear();
+        window.location.reload();
+      },
+    });
   }
   return (
     <nav
@@ -17,19 +27,12 @@ const Navbar = () => {
       }}
     >
       <div className="container-fluid">
-      <button
-            className="btn fw-bold"
-            style={{
-              padding: "0 20px",
-              height: "40px",
-              backgroundColor: "#214D97",
-              color: "#fff",
-              borderRadius: "8px",
-            }}
-            onClick={handleLogout}
-          >
-            تسجيل خروج
-          </button>
+        <button
+          className="btn btn-outline-danger fw-bold"
+          onClick={handleLogout}
+        >
+          تسجيل خروج
+        </button>
 
         <button
           className="navbar-toggler"
@@ -45,7 +48,10 @@ const Navbar = () => {
 
         <div className="collapse navbar-collapse" id="navbarContent">
           <ul className="navbar-nav mx-auto mb-2 mb-lg-0 fs-5 fw-bold">
-            <li style={{fontWeight:'400', fontSize:'18px'}} className="nav-item">
+            <li
+              style={{ fontWeight: "400", fontSize: "18px" }}
+              className="nav-item"
+            >
               <Link className="nav-link" to="/attentancerecord">
                 سجل الحضور
               </Link>
@@ -93,13 +99,13 @@ const Navbar = () => {
             />
           </div>
           <Link className="navbar-brand d-flex align-items-center" to="/">
-          <img
-            src={logo}
-            alt="Logo"
-            className="px-4"
-            style={{ width: "90%" }}
-          />
-        </Link>
+            <img
+              src={logo}
+              alt="Logo"
+              className="px-4"
+              style={{ width: "90%" }}
+            />
+          </Link>
         </div>
       </div>
     </nav>

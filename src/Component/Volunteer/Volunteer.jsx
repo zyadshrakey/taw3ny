@@ -89,10 +89,7 @@ function Volunteer() {
       <div className="d-flex flex-column">
 
             <div className="d-flex p-4 flex-row justify-content-end">
-                {/* <div className="volunteerBtn" onClick={handleGoBack}>
-                    <button style={{backgroundColor:'rgba(33, 77, 151, 1)', color:'white', border:'none', borderRadius:'8px' ,width:'79px', height:'40px'}}>
-                    <i className="fa-solid fa-arrow-left"></i> رجوع
-                    </button></div> */}
+
                 <div className="title">
                     <h1>ملف المتطوعين </h1>
                 </div>
@@ -123,6 +120,7 @@ function Volunteer() {
                       renderRow={(item, i) => renderRow(item, i)}
                       isLoading={false}
                       emptyMessage="لا توجد نتائج مطابقة"
+                      maxHeight="500px"
                     />
                         ) : (
                         <>
@@ -132,13 +130,14 @@ function Volunteer() {
                     </div>
                     ):(<>
                     <table className="table table-striped rounded-2" dir='rtl'>
-                    <Table
+                      <Table
                       columns={columns}
                       data={volunteer}
                       renderRow={(item, i) => renderRow(item, i)}
                       isLoading={isLoading}
                       emptyMessage="لا يوجد متطوعين"
-                    />
+                      maxHeight="500px"
+                    />                    
                     </table>
                     </>)}
                     

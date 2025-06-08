@@ -204,7 +204,7 @@ function AttendanceRecord() {
               نتائج البحث :{" "}
             </h5>
             {filteredVolunteers.length > 0 ? (
-              <table dir="rtl" className="table table-bordered">
+              <table dir="rtl" className="table table-bordered" style={{maxHeight:'500px'}} >
                 <thead>
                   <tr className="table-primary table-borderless text-center">
                     <th>الاسم</th>

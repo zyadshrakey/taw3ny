@@ -8,6 +8,8 @@ function CompanyRegister() {
   //   const [isClicked, setIsClicked] = useState(true);
 
   const [loading, setLoading] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false)
+  const [confirmPassVisible, setConfirmPassVisible] = useState(false)
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -102,17 +104,6 @@ function CompanyRegister() {
         .pattern(/^[0-9]+$/)
         .required(),
       address: Joi.string().required(),
-      // facebookLink: Joi.string()
-      //   .pattern(/^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9(\.\?)?]/)
-      //   .required(),
-      // instagramLink: Joi.string()
-      //   .pattern(/^(https?:\/\/)?(www\.)?instagram\.com\/([a-zA-Z0-9._]+)\/?$/)
-      //   .required(),
-      // websiteUrl: Joi.string()
-      //   .pattern(
-      //     /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/
-      //   )
-      //   .required(),
       registrationNumber: Joi.string()
         .pattern(/^[0-9\u0621-\u064A]{5,10}$/)
         .required(),
@@ -194,8 +185,16 @@ function CompanyRegister() {
                 className="fas fa-key"
                 style={{ position: "absolute", right: "20px", bottom: "20px" }}
               ></i>
+              <i
+                id="showPass"
+                className={`fas ${
+                passwordVisible ? 'fa-eye-slash' : 'fa-eye'
+                }`}
+                onClick={() => setPasswordVisible(!passwordVisible)}
+                style={{ position: "absolute", left: "20px", bottom: "24px" , color:'gray' }}
+              ></i>
               <input
-                type="password"
+                type={passwordVisible ? 'text' : 'password'}
                 onChange={getUserData}
                 name="password"
                 placeholder="كلمة المرور"
@@ -209,13 +208,22 @@ function CompanyRegister() {
                 dir="rtl"
               />
             </div>
+
             <div className="input-contaier position-relative py-2">
               <i
                 className="fas fa-key"
                 style={{ position: "absolute", right: "20px", bottom: "20px" }}
               ></i>
+               <i
+                id="showPass"
+                className={`fas ${
+                confirmPassVisible ? 'fa-eye-slash' : 'fa-eye'
+                }`}
+                onClick={() => setConfirmPassVisible(!confirmPassVisible)}
+                style={{ position: "absolute", left: "20px", bottom: "24px" , color:'gray' }}
+              ></i>
               <input
-                type="password"
+                type={confirmPassVisible ? 'text' : 'password'}
                 onChange={getUserData}
                 name="confirmPassword"
                 placeholder=" تأكيد كلمة المرور"
@@ -354,6 +362,7 @@ function CompanyRegister() {
                 color: "white",
                 borderRadius: "24px",
                 height: "48px",
+                transition:'all .5s ease-in-out'
               }}
             >
               {loading === true ? (

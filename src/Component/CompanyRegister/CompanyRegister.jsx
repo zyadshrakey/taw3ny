@@ -2,10 +2,8 @@ import axios from "axios";
 import Joi from "joi";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// import companyImg from "./../../../public/signup1.jpeg";
 
 function CompanyRegister() {
-  //   const [isClicked, setIsClicked] = useState(true);
 
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false)

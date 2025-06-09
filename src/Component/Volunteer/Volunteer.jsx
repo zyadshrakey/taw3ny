@@ -89,22 +89,21 @@ function Volunteer() {
       <div className="d-flex flex-column">
 
             <div className="d-flex p-4 flex-row justify-content-end">
-
                 <div className="title">
                     <h1>ملف المتطوعين </h1>
                 </div>
             </div>
             <div className='mx-4 d-flex flex-md-row flex-column-reverse justify-content-between align-items-center'>
 
-            <div style={{width:'20%'}}>
-              <button className="detailBtn border-0 p-2" style={{backgroundColor:'#EBEBEB', borderRadius:'8px'}}><Link to={'/volunteerinopportunity'} className="text-decoration-none " style={{color:'black'}}>متطوعين فى الفرص</Link></button>
-            </div>
+              <div style={{width:'20%'}}>
+                <button className="detailBtn border-0 p-2" style={{backgroundColor:'#EBEBEB', borderRadius:'8px'}}><Link to={'/volunteerinopportunity'} className="text-decoration-none " style={{color:'black'}}>متطوعين فى الفرص</Link></button>
+              </div>
 
-            <div className="py-4 d-flex flex-row align-items-center justify-content-end volunteerInput position-relative" style={{width:'100%'}}>
-              <input className="py-1 px-5" style={{ borderRadius:'4px', border:'1px solid rgba(167, 167, 167, 1)', width:'80%'}} 
-              type="text" placeholder="ابحث بالأسم" dir="rtl" onChange={(e)=>setSearchItem(e.target.value)}/>
-              <i style={{color:'rgba(33, 77, 151, 1)',right:'25px', top:'50%', transform:'translateY(-50%)'}} className="fa-solid fa-magnifying-glass position-absolute px-1"></i>
-            </div>
+              <div className="py-4 d-flex flex-row align-items-center justify-content-end volunteerInput position-relative" style={{width:'100%'}}>
+                <input className="py-1 px-5" style={{ borderRadius:'4px', border:'1px solid rgba(167, 167, 167, 1)', width:'80%'}} 
+                type="text" placeholder="ابحث بالأسم" dir="rtl" onChange={(e)=>setSearchItem(e.target.value)}/>
+                <i style={{color:'rgba(33, 77, 151, 1)',right:'25px', top:'50%', transform:'translateY(-50%)'}} className="fa-solid fa-magnifying-glass position-absolute px-1"></i>
+              </div>
 
             </div>
 

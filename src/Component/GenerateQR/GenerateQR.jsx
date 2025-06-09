@@ -22,16 +22,12 @@ function GenerateQR() {
               },
               responseType: 'blob'}
         )
-            
             console.log(response.data);
-            // setQrCode(response.data)
-            
             const imageUrl = URL.createObjectURL(response.data) 
             setQrCode(imageUrl)
         }
         catch(error){
             console.log(error);
-
         }finally{
             setLoading(false)
         }

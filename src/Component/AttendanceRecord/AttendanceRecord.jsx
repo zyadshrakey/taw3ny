@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Loader from "../Loader/Loader";
+import { FaQrcode, FaArrowLeft, FaSearch, FaTimes } from "react-icons/fa";
 
 function AttendanceRecord() {
   const [show, setShow] = useState(false);
@@ -80,249 +81,270 @@ function AttendanceRecord() {
 
   return (
     <>
-      <div className="d-flex flex-column">
-        <div className="d-flex p-4 flex-row justify-content-end">
-          {/* <div className="volunteerBtn" onClick={handleGoBack}>
-            <button
-              style={{
-                backgroundColor: "rgba(33, 77, 151, 1)",
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                width: "79px",
-                height: "40px",
-              }}
-            >
-              <i className="fa-solid fa-arrow-left"></i> رجوع
-            </button>
-          </div> */}
-          <div className="title">
-            <h1>سجل الحضور</h1>
-          </div>
-        </div>
-
-        <div className="container d-flex flex-md-row flex-column-reverse justify-content-between align-items-center">
-          <Button
-            variant="primary"
-            onClick={handleShow}
-            className="w-25 "
+      <div style={{ minHeight: "100vh", background: "#f4f7fb" }}>
+        {/* Header */}
+        <div
+          className="d-flex flex-row align-items-center justify-content-between px-4 py-3"
+          style={{
+            background: "#fff",
+            borderBottom: "1px solid #e5e7eb",
+            boxShadow: "0 2px 8px rgba(33,77,151,0.04)",
+            position: "sticky",
+            top: 0,
+            zIndex: 10,
+            borderRadius: "0 0 18px 18px"
+          }}
+        >
+          <button
+            className="d-flex align-items-center gap-2"
             style={{
-              backgroundColor:'#EBEBEB',
+              backgroundColor: "#fff",
+              color: "#214D97",
+              border: "1px solid #214D97",
               borderRadius: "8px",
-              boxShadow: "0 4px 8px 0 rgb(137, 166, 211)",
-              border: "none",
-              color:'black'
+              fontWeight: "bold",
+              fontSize: "1rem",
+              padding: "8px 18px",
+              transition: "background 0.2s, color 0.2s",
+            }}
+            onClick={handleGoBack}
+            onMouseEnter={e => {
+              e.currentTarget.style.backgroundColor = "#214D97";
+              e.currentTarget.style.color = "#fff";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.backgroundColor = "#fff";
+              e.currentTarget.style.color = "#214D97";
             }}
           >
-            QR Code
-          </Button>
+            <FaArrowLeft className="ms-2" /> رجوع
+          </button>
+          <h1 style={{ color: "#214D97", fontWeight: "bold", margin: 0, fontSize: "1.5rem" }}>
+            سجل الحضور
+          </h1>
+          <button
+            className="d-flex align-items-center gap-2"
+            style={{
+              backgroundColor: "#fff",
+              color: "#214D97",
+              border: "1px solid #214D97",
+              borderRadius: "8px",
+              fontWeight: "bold",
+              fontSize: "1rem",
+              padding: "8px 18px",
+              transition: "background 0.2s, color 0.2s",
+            }}
+            onClick={handleShow}
+            onMouseEnter={e => {
+              e.currentTarget.style.backgroundColor = "#214D97";
+              e.currentTarget.style.color = "#fff";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.backgroundColor = "#fff";
+              e.currentTarget.style.color = "#214D97";
+            }}
+          >
+            <FaQrcode className="ms-2" /> QR Code
+          </button>
+        </div>
 
-          <Modal show={show} onHide={handleClose}>
-          <div className="volunteerBtn" onClick={handleClose}>
-            <button 
-            className="px-3 py-2"
+        {/* QR Modal */}
+        <Modal show={show} onHide={handleClose} centered>
+          <div className="d-flex justify-content-end">
+            <button
+              className="px-3 py-2"
               style={{
-                color:'red',
+                color: "#fff",
                 border: "none",
-                borderRadius: "8px",
-                backgroundColor: "white"
+                borderRadius: "50%",
+                backgroundColor: "#e74c3c",
+                fontSize: "1.2rem",
+                margin: "10px",
+                boxShadow: "0 2px 8px rgba(231,76,60,0.12)",
               }}
+              onClick={handleClose}
             >
-              <i class="fa-solid fa-x"></i> 
+              <FaTimes />
             </button>
           </div>
-            <div className="d-flex flex-column align-items-center h-100 p-3">
-              <div className="qrBtn container d-flex align-items-center justify-content-center">
-                <button
-                  className="py-2 px-3"
-                  style={{
-                    backgroundColor: "rgba(33, 77, 151, 1)",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "8px",
-                  }}
-                  onClick={generatQr}
-                  disabled={isLoading} // optionally disable to avoid multiple clicks
-                >
-                  إنشاء رمز الاستجابة السريعة
-                </button>
+          <div className="d-flex flex-column align-items-center h-100 p-3">
+            <button
+              className="py-2 px-4 mb-3"
+              style={{
+                backgroundColor: "#214D97",
+                color: "#fff",
+                border: "none",
+                borderRadius: "8px",
+                fontWeight: "bold",
+                fontSize: "1rem",
+                transition: "background 0.2s",
+              }}
+              onClick={generatQr}
+              disabled={isLoading}
+            >
+              إنشاء رمز الاستجابة السريعة
+            </button>
+            {isLoading && (
+              <div className="mt-4 d-flex justify-content-center align-items-center" style={{ height: "100px" }}>
+                <Loader />
               </div>
-
-              {isLoading && (
-                <div
-                  className="mt-4 d-flex justify-content-center align-items-center"
-                  style={{ height: "100px" }}
-                >
-                  <Loader />
-                </div>
-              )}
-
-              {qrCode && !isLoading && (
-                <div className="mt-4 p-2 d-flex justify-content-center">
-                  <img
-                    src={qrCode}
-                    alt="QR Code"
-                    style={{ width: "300px", height: "300px" }}
-                  />
-                </div>
-              )}
-            </div>
-          </Modal>
-
-
-          <div
-            className=" p-4 d-flex flex-row align-items-center justify-content-end volunteerInput position-relative"
-            style={{ width: "100%" }}
-          >
-            <input
-              className="py-1 px-5"
-              style={{
-                borderRadius: "4px",
-                border: "1px solid rgba(167, 167, 167, 1)",
-                width: "80%",
-              }}
-              type="text"
-              placeholder="البحث"
-              dir="rtl"
-              onChange={(e) => setSearchItem(e.target.value)}
-            />
-            <i
-              style={{
-                color: "rgba(33, 77, 151, 1)",
-                right: "25px",
-                top: "50%",
-                transform: "translateY(-50%)",
-              }}
-              className="fa-solid fa-magnifying-glass position-absolute px-1"
-            ></i>
-          </div>
-        </div>
-
-        {searchItem && searchItem.length>0 ? (
-          <div className="p-2">
-            <h5 dir="rtl" className="text-danger flex-start">
-              نتائج البحث :{" "}
-            </h5>
-            {filteredVolunteers.length > 0 ? (
-              <table dir="rtl" className="table table-bordered" style={{maxHeight:'500px'}} >
-                <thead>
-                  <tr className="table-primary table-borderless text-center">
-                    <th>الاسم</th>
-                    <th>وقت الحضور</th>
-                    <th>وقت الانصراف</th>
-                    <th>مدة التواجد</th>
-                    <th>الحالة</th>
-                  </tr>
-                </thead>
-                <tbody>
-                {isLoading? (
-                                <tr>
-                                <td colSpan="5" className="text-center py-3">
-                                    <Loader />
-                                </td>
-                                </tr>
-                            ):(<>
-                    {filteredVolunteers.map((item, index) => (
-                    <tr className="py-2 text-center" key={item.id || index}>
-                      <td>
-                        {item.volunteerName || (
-                          <span className="text-danger">N/A</span>
-                        )}
-                      </td>
-                      <td>
-                        {item.checkInTime || (
-                          <span className="text-danger">N/A</span>
-                        )}
-                      </td>
-                      <td>
-                        {item.checkOutTime|| (
-                          <span className="text-danger">N/A</span>
-                        )}
-                      </td>
-                      <td>
-                        {item.duration|| (
-                          <span className="text-danger">N/A</span>
-                        )}
-                      </td>
-                      <td>
-                      {item.status? item.status == "Active"
-                            ? "متواجد"
-                            : "غير متواجد" :
-                                <span className="text-danger">N/A</span>
-                              }
-                      </td>
-                    </tr>
-                  ))}
-                      </>)}
-                </tbody>
-              </table>
-            ) : (
-              <p className="text-danger text-center">لا توجد نتائج مطابقة</p>
+            )}
+            {qrCode && !isLoading && (
+              <div className="mt-4 p-2 d-flex justify-content-center">
+                <img
+                  src={qrCode}
+                  alt="QR Code"
+                  style={{ width: "220px", height: "220px", borderRadius: "12px", border: "1px solid #eee" }}
+                />
+              </div>
             )}
           </div>
-        ):(
-          <div className="volunteerBtn container d-flex flex-column align-item-center justify-content-center gap-5">
-          <div className="d-flex flex-column align-align-items-center">
-            <div className="p-2">
-              <table dir="rtl" className="table table-bordered">
-                <thead>
-                  <tr className="table-primary table-borderless text-center">
-                    <th>الاسم</th>
-                    <th>وقت الحضور</th>
-                    <th>وقت الانصراف</th>
-                    <th>مدة التواجد</th>
-                    <th>الحالة</th>
-                  </tr>
-                </thead>
-                <tbody>
-                {isLoading?(
-                                <tr>
-                                <td colSpan="5" className="text-center py-3">
-                                    <Loader />
-                                </td>
-                                </tr>
-                            ):(<>
-                             {attentance &&
-                    attentance.map((item, index) => (
-                      <tr className="py-2 text-center" key={item.id || index}>
-                        <td>
-                          {item.volunteerName || (
-                            <span className="text-danger">N/A</span>
-                          )}
-                        </td>
-                        <td>
-                        {item.checkInTime || (
-                          <span className="text-danger">N/A</span>
+        </Modal>
+
+        {/* Table */}
+        <div className="container py-4">
+          {/* Search Input */}
+          <div className="d-flex justify-content-end mb-3 position-relative">
+            <input
+              className="form-control"
+              style={{
+                maxWidth: "350px",
+                borderRadius: "24px",
+                paddingRight: "38px",
+                background: "#fff",
+                border: "1px solid #d1d5db",
+                boxShadow: "0 2px 8px rgba(33,77,151,0.03)",
+                fontSize: "1rem",
+              }}
+              type="text"
+              placeholder="ابحث بالاسم"
+              dir="rtl"
+              value={searchItem}
+              onChange={e => setSearchItem(e.target.value)}
+            />
+            <FaSearch
+              style={{
+                color: "#9ca3af",
+                position: "absolute",
+                right: "18px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                pointerEvents: "none",
+                fontSize: "1.1rem",
+              }}
+            />
+          </div>
+          <div className="card shadow-sm rounded-4 p-3" style={{ background: "#fff", border: "none" }}>
+            {searchItem && searchItem.length > 0 ? (
+              <>
+                <h5 dir="rtl" className="mb-3" style={{ color: "#214D97", fontWeight: "bold" }}>
+                  نتائج البحث :
+                </h5>
+                {filteredVolunteers.length > 0 ? (
+                  <div style={{ overflowX: "auto" }}>
+                    <table dir="rtl" className="table table-hover table-borderless" style={{ minWidth: 600 }}>
+                      <thead>
+                        <tr className="text-center" style={{ background: "#f4f7fb" }}>
+                          <th>الاسم</th>
+                          <th>وقت الحضور</th>
+                          <th>وقت الانصراف</th>
+                          <th>مدة التواجد</th>
+                          <th>الحالة</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {isLoading ? (
+                          <tr>
+                            <td colSpan="5" className="text-center py-3">
+                              <Loader />
+                            </td>
+                          </tr>
+                        ) : (
+                          filteredVolunteers.map((item, index) => (
+                            <tr className="py-2 text-center" key={item.id || index} style={{ borderBottom: "1px solid #f0f0f0" }}>
+                              <td>{item.volunteerName || <span className="text-danger">N/A</span>}</td>
+                              <td>{item.checkInTime || <span className="text-danger">N/A</span>}</td>
+                              <td>{item.checkOutTime || <span className="text-danger">N/A</span>}</td>
+                              <td>{item.duration || <span className="text-danger">N/A</span>}</td>
+                              <td>
+                                {item.status
+                                  ? item.status === "Active"
+                                    ? <span className="badge bg-success">متواجد</span>
+                                    : <span className="badge bg-secondary">غير متواجد</span>
+                                  : <span className="text-danger">N/A</span>}
+                              </td>
+                            </tr>
+                          ))
                         )}
-                      </td>
-                      <td>
-                        {item.checkOutTime|| (
-                          <span className="text-danger">N/A</span>
-                        )}
-                      </td>
-                      <td>
-                        {item.duration|| (
-                          <span className="text-danger">N/A</span>
-                        )}
-                      </td>
-                        <td>
-                          {item.status? item.status == "Active"
-                            ? "متواجد"
-                            : "غير متواجد" :
-                                <span className="text-danger">N/A</span>
-                              }
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <p className="text-danger text-center">لا توجد نتائج مطابقة</p>
+                )}
+              </>
+            ) : (
+              <div style={{ overflowX: "auto" }}>
+                <table dir="rtl" className="table table-hover table-borderless" style={{ minWidth: 600 }}>
+                  <thead>
+                    <tr className="text-center" style={{ background: "#f4f7fb" }}>
+                      <th>الاسم</th>
+                      <th>وقت الحضور</th>
+                      <th>وقت الانصراف</th>
+                      <th>مدة التواجد</th>
+                      <th>الحالة</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {isLoading ? (
+                      <tr>
+                        <td colSpan="5" className="text-center py-3">
+                          <Loader />
                         </td>
                       </tr>
-                    ))}
-                    </>)}
-                 
-                </tbody>
-              </table>
-            </div>
+                    ) : (
+                      attentance &&
+                      attentance.map((item, index) => (
+                        <tr className="py-2 text-center" key={item.id || index} style={{ borderBottom: "1px solid #f0f0f0" }}>
+                          <td>{item.volunteerName || <span className="text-danger">N/A</span>}</td>
+                          <td>{item.checkInTime || <span className="text-danger">N/A</span>}</td>
+                          <td>{item.checkOutTime || <span className="text-danger">N/A</span>}</td>
+                          <td>{item.duration || <span className="text-danger">N/A</span>}</td>
+                          <td>
+                            {item.status
+                              ? item.status === "Active"
+                                ? <span className="badge bg-success">متواجد</span>
+                                : <span className="badge bg-secondary">غير متواجد</span>
+                              : <span className="text-danger">N/A</span>}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
-        )}
-
+        <style>
+          {`
+            .table tbody tr {
+              transition: background 0.22s cubic-bezier(0.4,0,0.2,1), transform 0.22s cubic-bezier(0.4,0,0.2,1);
+              cursor: pointer;
+            }
+            .table tbody tr:hover {
+              background: #eaf1fb !important;
+              transform: scale(1.01);
+              box-shadow: 0 2px 12px rgba(33,77,151,0.06);
+            }
+            .table th {
+              background: #f4f7fb !important;
+              color: #214D97 !important;
+              font-weight: bold;
+              border-bottom: 2px solid #e5e7eb !important;
+            }
+          `}
+        </style>
       </div>
     </>
   );

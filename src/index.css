@@ -35,14 +35,14 @@ body {
   font-size: 16px;
 }
 .compUser-img {
-  background-image: url("../public/signup1.jpeg");
+  background-image: url("../src/assets/auth.jpeg");
   background-position: center;
   background-size: cover;
   min-height: 100dvh;
   width: 50%;
 }
 .login-img {
-  background-image: url("../public/login.jpeg");
+  background-image: url("../src/assets/auth2.jpeg");
   background-size: cover;
   background-position: center;
   min-height: 100dvh;

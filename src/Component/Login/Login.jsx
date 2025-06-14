@@ -206,7 +206,6 @@ function Login({saveUserData}) {
           </p>
         </div>
         <div className="login-img w-100">
-          {/* <img src={`/login.jpeg`} alt="login" style={{height:'100vh', width:'550px'}} /> */}
         </div>
       </div>
     </>

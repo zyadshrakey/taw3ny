@@ -10,7 +10,6 @@ function GenerateQR() {
     const navigate= useNavigate()
     const handleGoBack=()=>{
         navigate(-1)
-
     }
 
     async function generatQr() {
@@ -34,8 +33,6 @@ function GenerateQR() {
     
     }
 
-
-  
     return <>
      <div className='d-flex flex-column align-align-items-center'>
 
@@ -55,13 +52,11 @@ function GenerateQR() {
             {loading ? '...جاري الإنشاء' : 'إنشاء رمز الاستجابة السريعة'}
             </button>
         </div>
-
         {qrCode && (
         <div className="mt-4 p-2 d-flex justify-content-center">
           <img src={qrCode}  alt="QR Code" style={{ width: '300px', height: '300px' }} />
         </div>
         )}
-
     </div>
     </>
 }

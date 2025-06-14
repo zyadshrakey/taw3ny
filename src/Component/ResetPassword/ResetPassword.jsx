@@ -106,10 +106,21 @@ const ResetPassword = () => {
                   border: "2px solid rgba(33, 77, 151, 1)",
                   borderRadius: "8px",
                   textAlign: "center",
+                  background: "#fff",
+                  transition:
+                    "background 0.25s cubic-bezier(0.4,0,0.2,1), color 0.25s cubic-bezier(0.4,0,0.2,1)",
                 }}
                 onClick={handlegoBack}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#214D97";
+                  e.currentTarget.style.color = "#fff";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "#fff";
+                  e.currentTarget.style.color = "rgba(33, 77, 151, 1)";
+                }}
               >
-                <i class="fa-solid fa-chevron-left"></i> رجوع
+                <i className="fa-solid fa-chevron-left"></i> رجوع
               </button>
             </div>
 
@@ -181,8 +192,20 @@ const ResetPassword = () => {
                     color: "white",
                     borderRadius: "24px",
                     height: "48px",
+                    transition:
+                      "background 0.25s cubic-bezier(0.4,0,0.2,1), color 0.25s cubic-bezier(0.4,0,0.2,1), transform 0.25s cubic-bezier(0.4,0,0.2,1)",
                   }}
                   loading={loading}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#16336c";
+                    e.currentTarget.style.color = "#fff";
+                    e.currentTarget.style.transform = "scale(1.04)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "#214D97";
+                    e.currentTarget.style.color = "white";
+                    e.currentTarget.style.transform = "scale(1)";
+                  }}
                 >
                   إرسال
                 </Button>
@@ -336,7 +359,6 @@ const ResetPassword = () => {
         </div>
 
         <div
-          style={{ backgroundColor: "#214D97" }}
           className="col-md-6 p-0 vh-100 me-0 d-flex align-items-center justify-content-center"
         >
           <img

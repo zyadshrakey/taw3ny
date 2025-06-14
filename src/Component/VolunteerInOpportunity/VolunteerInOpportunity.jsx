@@ -12,7 +12,6 @@ function VolunteerInOpportunity() {
   const handleGoBack = () => {
     navigate(-1);
   };
-
   const columns = [
     "فى الفرص",
     "الاسم",
@@ -99,93 +98,157 @@ function VolunteerInOpportunity() {
   }, []);
   return (
     <>
-      <div className="d-flex flex-column">
-        <div className="d-flex p-4 flex-row justify-content-between">
-          <div className="volunteerBtn" onClick={handleGoBack}>
-            <button
-              style={{
-                backgroundColor: "rgba(33, 77, 151, 1)",
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                width: "79px",
-                height: "40px",
-              }}
-            >
-              <i className="fa-solid fa-arrow-left"></i> رجوع
-            </button>
-          </div>
+      <div className="d-flex flex-column" style={{ minHeight: "100vh", background: "#f8fafc" }}>
+        {/* Header */}
+        <div
+          className="d-flex p-4 flex-row justify-content-between align-items-center"
+          style={{
+            background: "#fff",
+            borderRadius: "0 0 18px 18px",
+            boxShadow: "0 2px 12px rgba(33,77,151,0.06)",
+            borderBottom: "1px solid #e5e7eb",
+          }}
+        >
+          <button
+            className="d-flex align-items-center gap-2"
+            style={{
+              backgroundColor: "#f3f4f6",
+              color: "#214D97",
+              border: "none",
+              borderRadius: "8px",
+              width: "90px",
+              height: "42px",
+              fontWeight: "bold",
+              fontSize: "1rem",
+              boxShadow: "0 2px 8px rgba(33,77,151,0.04)",
+              transition: "background 0.2s, color 0.2s",
+            }}
+            onClick={handleGoBack}
+            onMouseEnter={e => {
+              e.currentTarget.style.backgroundColor = "#e5e7eb";
+              e.currentTarget.style.color = "#1e293b";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.backgroundColor = "#f3f4f6";
+              e.currentTarget.style.color = "#214D97";
+            }}
+          >
+            <i className="fa-solid fa-arrow-left"></i> رجوع
+          </button>
           <div className="title">
-            <h1>ملف المتطوعين </h1>
+            <h1 style={{ color: "#22223b", fontWeight: "bold", letterSpacing: "1px", margin: 0, fontSize: "1.7rem" }}>
+              ملف المتطوعين
+            </h1>
           </div>
         </div>
 
-        <div className="p-4 d-flex flex-row align-items-center justify-content-end volunteerInput position-relative">
+        {/* Search Bar */}
+        <div
+          className="px-4 py-3 d-flex flex-row align-items-center justify-content-end volunteerInput position-relative"
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 2,
+            background: "#f8fafc",
+            borderBottom: "1px solid #e5e7eb",
+            boxShadow: "0 2px 8px rgba(33,77,151,0.02)",
+          }}
+        >
           <input
-            className="py-1 px-4"
+            className="py-2 px-5"
             style={{
-              width: "500px",
-              borderRadius: "4px",
-              border: "1px solid rgba(167, 167, 167, 1)",
-              paddingRight: "30px",
+              width: "100%",
+              maxWidth: "500px",
+              borderRadius: "24px",
+              border: "1px solid #d1d5db",
+              paddingRight: "38px",
+              background: "#fff",
+              boxShadow: "0 2px 8px rgba(33,77,151,0.03)",
+              transition: "box-shadow 0.2s, border 0.2s",
+              fontSize: "1rem",
             }}
             type="text"
-            placeholder="ابحث بالأسم"
+            placeholder="ابحث بالأسم..."
             dir="rtl"
             onChange={(e) => setSearchItem(e.target.value)}
           />
           <i
             style={{
-              color: "rgba(33, 77, 151, 1)",
-              right: "25px",
+              color: "#9ca3af",
+              right: "35px",
               top: "50%",
+              position: "absolute",
               transform: "translateY(-50%)",
+              pointerEvents: "none",
+              fontSize: "1.1rem",
             }}
             className="fa-solid fa-magnifying-glass position-absolute px-1"
           ></i>
         </div>
 
-        <div className="p-4 volunteerTable ">
-
-              
-                {seacrchItem && seacrchItem.length>0 ? (
-                  <>{isLoading ? <Loader/> :(<>
-                  <div className="p-4 volunteerSearchResult">
-                    <h5 dir="rtl" className=" flex-start">
-                      نتائج البحث:
-                    </h5>
-                    {filteredVolunteers.length > 0 ? (
-                      <Table
-                        columns={columns}
-                        data={filteredVolunteers}
-                        renderRow={(item, i) => renderRow(item, i)}
-                        isLoading={false}
-                        emptyMessage="لا توجد نتائج مطابقة"
-                        maxHeight="500px"
-                      />
-                    ) : (
-                      <p
-                        className="text-danger text-center"
-                        style={{ fontSize: "20px" }}
-                      >
-                        لا توجد نتائج مطابقة
-                      </p>
-                    )}
-                </div></>)}</>
-                    
-                ):(<>
-                  <Table
+        {/* Table & Results */}
+        <div className="p-4 volunteerTable flex-grow-1">
+          {error && (
+            <div className="alert alert-danger text-center my-3">{error}</div>
+          )}
+          {seacrchItem && seacrchItem.length > 0 ? (
+            isLoading ? (
+              <div className="d-flex justify-content-center align-items-center py-5">
+                <Loader />
+              </div>
+            ) : (
+              <div className="p-4 volunteerSearchResult card shadow-sm rounded-4" style={{ background: "#fff", border: "none" }}>
+                <h5 dir="rtl" className="mb-3" style={{ color: "#22223b", fontWeight: "bold" }}>نتائج البحث:</h5>
+                {filteredVolunteers.length > 0 ? (
+                  <div style={{ overflowX: "auto" }}>
+                    <Table
                       columns={columns}
-                      data={volunteer}
+                      data={filteredVolunteers}
                       renderRow={(item, i) => renderRow(item, i)}
-                      isLoading={isLoading}
-                      emptyMessage="لا يوجد متطوعين"
+                      isLoading={false}
+                      emptyMessage="لا توجد نتائج مطابقة"
                       maxHeight="500px"
                     />
-                </>)}
-
-       
+                  </div>
+                ) : (
+                  <p className="text-danger text-center" style={{ fontSize: "20px" }}>
+                    لا توجد نتائج مطابقة
+                  </p>
+                )}
+              </div>
+            )
+          ) : (
+            <div className="card shadow-sm rounded-4 p-3" style={{ overflowX: "auto", background: "#fff", border: "none" }}>
+              <Table
+                columns={columns}
+                data={volunteer}
+                renderRow={(item, i) => renderRow(item, i)}
+                isLoading={isLoading}
+                emptyMessage="لا يوجد متطوعين"
+                maxHeight="500px"
+              />
+            </div>
+          )}
         </div>
+        <style>
+          {`
+            .volunteerTable table tr {
+              transition: background 0.22s cubic-bezier(0.4,0,0.2,1), transform 0.22s cubic-bezier(0.4,0,0.2,1);
+              cursor: pointer;
+            }
+            .volunteerTable table tr:hover {
+              background: #f3f4f6 !important;
+              transform: scale(1.012);
+              box-shadow: 0 2px 12px rgba(33,77,151,0.06);
+            }
+            .volunteerTable table th {
+              background: #f8fafc;
+              color: #22223b;
+              font-weight: bold;
+              border-bottom: 2px solid #e5e7eb;
+            }
+          `}
+        </style>
       </div>
     </>
   );

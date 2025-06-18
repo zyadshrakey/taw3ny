@@ -133,7 +133,7 @@ const VolunteerOpportunities = () => {
   return (
     <>
       <div
-        className="d-flex m-auto mt-2 align-items-center justify-content-between p-5"
+        className="d-flex m-auto align-items-center justify-content-between py-5"
         style={{ width: "90%" }}
       >
         <button
@@ -160,13 +160,13 @@ const VolunteerOpportunities = () => {
           }}
           onClick={() => openModal()}
         >
-          <PlusSquareOutlined style={{ fontSize: "1.3rem", marginLeft: 8 }} />
-          إضافة فرصة
+          <PlusSquareOutlined style={{ fontSize: "1.3rem", marginLeft: 8 }} />&nbsp;
+           إضافة فرصة
         </button>
         <h2 className="text-2xl fw-bold" style={{ color: "#214D97" }}>فرص التطوع</h2>
       </div>
 
-      <div className="container mx-auto p-5" dir="rtl">
+      <div className="container mx-auto " dir="rtl">
         {loading ? (
           <div className="d-flex justify-content-center align-items-center py-5">
             <Loader />

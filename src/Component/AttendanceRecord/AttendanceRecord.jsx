@@ -14,6 +14,7 @@ function AttendanceRecord() {
   const navigate = useNavigate();
   let [attentance, setAttentance] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [qrLoading, setIsQrLoading] = useState(true);
   let [error, setError] = useState(null);
   let [searchItem, setSearchItem] = useState("");
   let token = localStorage.getItem("userToken");
@@ -51,7 +52,7 @@ function AttendanceRecord() {
   );
 
   async function generatQr() {
-    setIsLoading(true);
+    setIsQrLoading(true);
     try {
       let response = await axios.get(
         "https://wezaa.runasp.net/Attendance/qrcode",
@@ -71,7 +72,7 @@ function AttendanceRecord() {
     } catch (error) {
       console.log(error);
     } finally {
-      setIsLoading(false);
+      setIsQrLoading(false);
     }
   }
 
@@ -180,16 +181,16 @@ function AttendanceRecord() {
                 transition: "background 0.2s",
               }}
               onClick={generatQr}
-              disabled={isLoading}
+              disabled={qrLoading}
             >
               إنشاء رمز الاستجابة السريعة
             </button>
-            {isLoading && (
+            {qrLoading && (
               <div className="mt-4 d-flex justify-content-center align-items-center" style={{ height: "100px" }}>
                 <Loader />
               </div>
             )}
-            {qrCode && !isLoading && (
+            {qrCode && !qrLoading && (
               <div className="mt-4 p-2 d-flex justify-content-center">
                 <img
                   src={qrCode}
@@ -329,12 +330,11 @@ function AttendanceRecord() {
         <style>
           {`
             .table tbody tr {
-              transition: background 0.22s cubic-bezier(0.4,0,0.2,1), transform 0.22s cubic-bezier(0.4,0,0.2,1);
+              transition: background 0.22s cubic-bezier(0.4,0,0.2,1), transform 0.22s cubic-bezier(0.4,0,0.2,1) , box-shadow 1s cubic-bezier(0.4,0,0.2,1);
               cursor: pointer;
             }
             .table tbody tr:hover {
               background: #eaf1fb !important;
-              transform: scale(1.01);
               box-shadow: 0 2px 12px rgba(33,77,151,0.06);
             }
             .table th {

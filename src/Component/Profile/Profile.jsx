@@ -11,11 +11,16 @@ import Loader from "../Loader/Loader";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const Profile = () => {
+
+  const [isOpen , setIsOpen]= useState(false)
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const fileInputRef = useRef(null);
+
+  const handleClose = () => setIsOpen(false);
+  const handleOpen = () => setIsOpen(true);
 
   useEffect(() => {
     Interceptor();
@@ -93,15 +98,15 @@ const Profile = () => {
   if (error) return <div className="text-center py-5 text-danger">{error}</div>;
 
   return (
-    <div className="container mt-3">
+    <div className="container my-3">
       <div className="card shadow overflow-hidden">
         {/* Cover Photo */}
-        <div style={{ height: 120, background: "#214D97", position: "relative" }}>
+        <div style={{ height: 70, background: "#214D97", position: "relative" }}>
           {/* Optionally add a cover image here */}
         </div>
         <div className="card-body position-relative" dir="rtl" style={{ marginTop: -75 }}>
           {/* Profile Picture */}
-          <div className="d-flex flex-column align-items-center mb-4">
+          <div className="d-flex flex-column align-items-center">
             <div style={{ position: "relative" }}>
               <img
                 src={profile?.pictureUrl}
@@ -117,6 +122,50 @@ const Profile = () => {
               >
                 <EditOutlined />
               </button>
+              <button
+                className="btn position-absolute d-flex align-items-center justify-content-center"
+                style={{
+                  top: 8,
+                  left: 8,
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                  background: "rgba(33,77,151,0.85)",
+                  color: "#fff",
+                  border: "none",
+                  boxShadow: "0 2px 8px rgba(33,77,151,0.13)",
+                  zIndex: 2,
+                  transition: "background 0.2s",
+                  padding: 0,
+                }}
+                onClick={handleOpen}
+                title="عرض الصورة"
+                type="button"
+                onMouseEnter={e => (e.currentTarget.style.background = "#16336c")}
+                onMouseLeave={e => (e.currentTarget.style.background = "rgba(33,77,151,0.85)")}
+              >
+                <i className="fa-solid fa-expand"></i>
+              </button>
+
+              <Modal open={isOpen} onCancel={handleClose} centered footer={null}>
+                        <div className="d-flex flex-column align-items-center h-100 p-3">
+                         
+                          {loading && (
+                            <div className="mt-4 d-flex justify-content-center align-items-center" style={{ height: "100px" }}>
+                              <Loader />
+                            </div>
+                          )}
+                          {!loading && (
+                            <img
+                              src={profile?.pictureUrl}
+                              alt="Profile"
+                              className="img-fluid rounded"
+                              style={{ maxHeight: "80vh", objectFit: "cover" }}
+                            />
+                          )}
+                          <h5 className="mt-3">{profile?.fullName}</h5>
+                        </div>
+                </Modal>
               <input
                 name="Picture"
                 type="file"
@@ -126,39 +175,44 @@ const Profile = () => {
                 style={{ display: "none" }}
               />
             </div>
-            <h4 className="mt-3">{profile?.fullName}</h4>
+            <h4 className="mt-1 my-1">{profile?.fullName}</h4>
             <span className="text-muted">{profile?.userName}</span>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="d-flex justify-content-center gap-2 mb-4">
-            <button
-              onClick={() => setIsEditing((prev) => !prev)}
-              className={`btn ${isEditing ? "btn-danger" : "btn-primary"}`}
-            >
-              {isEditing ? "إلغاء" : "تعديل"}
-            </button>
-            {isEditing && (
-              <button onClick={handleUpdateProfile} className="btn btn-success">
-                حفظ
-              </button>
-            )}
-            <button
-              onClick={handleDeleteProfile}
-              className="btn btn-outline-danger"
-              title="حذف بيانات المؤسسة"
-            >
-              <DeleteOutlined />
-            </button>
           </div>
 
           {/* Profile Sections */}
           <div className="row">
             {/* Basic Info */}
-            <div className="col-12 mb-3">
-              <h5 className="mb-3 border-bottom pb-2">المعلومات الأساسية</h5>
+            <div className="col-12">
+              <div className="d-flex justify-content-between align-items-center mb-1">
+                <div>
+                  <h5 className="mb-3 border-bottom pb-2">المعلومات الأساسية</h5>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="d-flex justify-content-center gap-2 mb-2">
+                  <button
+                    onClick={() => setIsEditing((prev) => !prev)}
+                    className={`btn ${isEditing ? "btn-danger" : "btn-primary"}`}
+                  >
+                    {isEditing ? "إلغاء" : <EditOutlined />}
+                  </button>
+                  {isEditing && (
+                    <button onClick={handleUpdateProfile} className="btn btn-success">
+                      حفظ
+                    </button>
+                  )}
+                  <button
+                    onClick={handleDeleteProfile}
+                    className="btn btn-outline-danger"
+                    title="حذف بيانات المؤسسة"
+                  >
+                    <DeleteOutlined />
+                  </button>
+                </div>
+              </div>
+              
             </div>
-            <div className="col-md-6 mb-3">
+            <div className="col-md-6 mb-2">
               <label className="form-label">الاسم الكامل:</label>
               <input
                 type="text"
@@ -169,7 +223,7 @@ const Profile = () => {
                 readOnly={!isEditing}
               />
             </div>
-            <div className="col-md-6 mb-3">
+            <div className="col-md-6 mb-2">
               <label className="form-label">اسم المستخدم:</label>
               <input
                 type="text"
@@ -180,7 +234,7 @@ const Profile = () => {
                 readOnly={!isEditing}
               />
             </div>
-            <div className="col-md-6 mb-3">
+            <div className="col-md-6 mb-2">
               <label className="form-label">البريد الإلكتروني:</label>
               <input
                 type="email"
@@ -191,7 +245,7 @@ const Profile = () => {
                 readOnly={!isEditing}
               />
             </div>
-            <div className="col-md-6 mb-3">
+            <div className="col-md-6 mb-2">
               <label className="form-label">رقم الهاتف:</label>
               <input
                 type="text"
@@ -204,10 +258,10 @@ const Profile = () => {
             </div>
 
             {/* Organization Info */}
-            <div className="col-12 mb-3">
-              <h5 className="mb-3 border-bottom pb-2">معلومات المؤسسة</h5>
+            <div className="col-12 mb-1">
+              <h5 className="mb-2 border-bottom pb-2">معلومات المؤسسة</h5>
             </div>
-            <div className="col-md-6 mb-3">
+            <div className="col-md-6 mb-2">
               <label className="form-label">العنوان:</label>
               <input
                 type="text"
@@ -218,7 +272,7 @@ const Profile = () => {
                 readOnly={!isEditing}
               />
             </div>
-            <div className="col-md-6 mb-3">
+            <div className="col-md-6 mb-2">
               <label className="form-label">رقم التسجيل:</label>
               <input
                 type="text"
@@ -229,7 +283,7 @@ const Profile = () => {
                 readOnly={!isEditing}
               />
             </div>
-            <div className="col-12 mb-3">
+            <div className="col-12 mb-2">
               <label className="form-label">الوصف:</label>
               <textarea
                 name="description"
@@ -242,10 +296,10 @@ const Profile = () => {
             </div>
 
             {/* Social Links */}
-            <div className="col-12 mb-3">
-              <h5 className="mb-3 border-bottom pb-2">روابط التواصل</h5>
+            <div className="col-12 mb-1">
+              <h5 className="mb-2 border-bottom pb-2">روابط التواصل</h5>
             </div>
-            <div className="col-md-4 mb-3">
+            <div className="col-md-4 mb-2">
               <label className="form-label">الموقع الإلكتروني:</label>
               <input
                 type="url"
@@ -256,7 +310,7 @@ const Profile = () => {
                 readOnly={!isEditing}
               />
             </div>
-            <div className="col-md-4 mb-3">
+            <div className="col-md-4 mb-2">
               <label className="form-label">فيسبوك:</label>
               <input
                 type="url"
@@ -267,7 +321,7 @@ const Profile = () => {
                 readOnly={!isEditing}
               />
             </div>
-            <div className="col-md-4 mb-3">
+            <div className="col-md-4 mb-2">
               <label className="form-label">إنستجرام:</label>
               <input
                 type="url"

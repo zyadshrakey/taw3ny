@@ -14,6 +14,8 @@ import VolunteerInOpportunity from "./Component/VolunteerInOpportunity/Volunteer
 import AttendanceRecord from "./Component/AttendanceRecord/AttendanceRecord";
 import GenerateQR from "./Component/GenerateQR/GenerateQR";
 import VolunteerDetails from "./Component/VolunteerDetails/VolunteerDetails";
+import ApprovedOpportunity from "./Component/ApprovedOpportunity/ApprovedOpportunity";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const [userData, setUserData] = useState(null);
@@ -98,6 +100,14 @@ function App() {
             </ProtectedRoute>
           ),
         },
+          {
+          path: "approvedopportunity",
+          element: (
+            <ProtectedRoute>
+              <ApprovedOpportunity userData={userData} />
+            </ProtectedRoute>
+          ),
+        },
       ],
     },
   ]);
@@ -113,6 +123,7 @@ function App() {
   return (
     <>
       <RouterProvider router={routers} />
+      <Toaster/>
     </>
   );
 }

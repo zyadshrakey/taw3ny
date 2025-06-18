@@ -32,7 +32,7 @@ function Login({saveUserData}) {
         localStorage.setItem("userToken", data.token);
         saveUserData()
         console.log(data.message);
-        navigate("/attentancerecord");
+        navigate("/");
         setLoading(false);
       } else {
         setError(data.message);

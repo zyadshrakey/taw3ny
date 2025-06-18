@@ -47,7 +47,7 @@ const Navbar = () => {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarContent">
-          <ul className="navbar-nav mx-auto mb-2 mb-lg-0 fs-5 fw-bold">
+          <ul className="navbar-nav mx-auto mb-2 mb-lg-0 fs-5 fw-bold justify-content-center text-center w-100">
             <li
               style={{ fontWeight: "400", fontSize: "18px" }}
               className="nav-item"
@@ -93,19 +93,19 @@ const Navbar = () => {
           <div className="hiImg d-flex align-items-center">
             <img
               src={hiImg}
-              className=" pb-2 mx-2"
-              style={{ width: "50px" }}
+              className="pb-2 mx-2"
+              style={{ width: "20%", minWidth: "40px", maxWidth: "60px" }}
               alt=""
             />
           </div>
-          <Link className="navbar-brand d-flex align-items-center" to="/">
-            <img
-              src={logo}
-              alt="Logo"
-              className="px-4"
-              style={{ width: "90%" }}
-            />
-          </Link>
+          <Link className="navbar-brand d-flex align-items-center justify-content-center" to="/">
+          <img
+            src={logo}
+            alt="Logo"
+            className="px-4"
+            style={{ width: "100%", minWidth: "60px", maxWidth: "160px" }}
+          />
+        </Link>
         </div>
       </div>
     </nav>

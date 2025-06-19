@@ -14,6 +14,7 @@ import VolunteerInOpportunity from "./Component/VolunteerInOpportunity/Volunteer
 import AttendanceRecord from "./Component/AttendanceRecord/AttendanceRecord";
 import GenerateQR from "./Component/GenerateQR/GenerateQR";
 import VolunteerDetails from "./Component/VolunteerDetails/VolunteerDetails";
+import ApprovedOpportunity from "./Component/ApprovedOpportunity/ApprovedOpportunity";
 
 function App() {
   const [userData, setUserData] = useState(null);
@@ -64,7 +65,7 @@ function App() {
             </ProtectedRoute>
           ),
         },
-       
+
         {
           path: "volunteerinopportunity",
           element: (
@@ -73,7 +74,7 @@ function App() {
             </ProtectedRoute>
           ),
         },
-        
+
         {
           path: "attentancerecord",
           element: (
@@ -95,6 +96,14 @@ function App() {
           element: (
             <ProtectedRoute>
               <VolunteerDetails userData={userData} />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "approvedopportunity",
+          element: (
+            <ProtectedRoute>
+              <ApprovedOpportunity userData={userData} />
             </ProtectedRoute>
           ),
         },

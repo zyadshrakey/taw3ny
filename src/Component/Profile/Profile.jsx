@@ -93,7 +93,7 @@ const Profile = () => {
   if (error) return <div className="text-center py-5 text-danger">{error}</div>;
 
   return (
-    <div className="container mt-3">
+    <div className="container pt-3">
       <div className="card shadow">
         <div className="card-body position-relative" dir="rtl">
           <button

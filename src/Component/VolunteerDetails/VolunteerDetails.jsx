@@ -24,7 +24,7 @@ function VolunteerDetails() {
       })
       .then((response) => {
         console.log(response.data);
-        setVolunteerInfo(response.data);
+        setVolunteerIfo(response.data);
       })
       .catch((error) => console.log(error));
   }
@@ -38,8 +38,8 @@ function VolunteerDetails() {
         }
       );
       if (response.status === 200) {
-        toast.success("تم حذف المتطوع بنجاح!");
-        window.location.href = "/volunteer";
+        message.success("تم حذف المتطوع بنجاح!");
+        window.history.back();
       } else {
         throw new Error("Failed to delete volunteer");
       }

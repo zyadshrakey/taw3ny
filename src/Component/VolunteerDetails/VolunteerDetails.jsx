@@ -3,15 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import img from "../../assets/avatar2.jpg";
 import { message } from "antd";
-import { FaStar, FaRegStar, FaTrashAlt } from "react-icons/fa";
 
 function VolunteerDetails() {
   let { id } = useParams();
   console.log("Volunteer Id:", id);
   let token = localStorage.getItem("userToken");
   let [volunteerInfo, setVolunteerIfo] = useState([]);
-  const [rating, setRating] = useState(0);
-  const [hover, setHover] = useState(0);
 
   async function getVolunteerdetails() {
     let response = await axios
@@ -26,28 +23,6 @@ function VolunteerDetails() {
       })
       .catch((error) => console.log(error));
   }
-
-  const submitRating = async () => {
-    if (rating < 1 || rating > 5) {
-      message.error("الرجاء اختيار تقييم بين 1 و 5");
-      return;
-    }
-
-    try {
-      await axios.put(
-        `https://wezaa.runasp.net/VolunteerApplications/rate/${id}`,
-        null,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          params: { rating },
-        }
-      );
-      message.success("تم تقييم المتطوع بنجاح!");
-    } catch (error) {
-      console.error(error);
-      message.error("حدث خطأ أثناء تقييم المتطوع");
-    }
-  };
 
   const deleteVolunteer = async () => {
     try {
@@ -84,69 +59,6 @@ function VolunteerDetails() {
                 className="rounded-circle mb-4"
                 style={{ width: "200px", height: "200px", objectFit: "cover" }}
               />
-
-              <div className="text-center mb-4" style={{ width: "100%" }}>
-                <div
-                  style={{
-                    direction: "rtl",
-                    display: "flex",
-                    justifyContent: "center",
-                    marginBottom: "20px",
-                  }}
-                >
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      style={{
-                        background: "none",
-                        border: "none",
-                        outline: "none",
-                        cursor: "pointer",
-                        padding: "0 8px",
-                        transition: "all 0.2s",
-                      }}
-                      onClick={() => setRating(star)}
-                      onMouseEnter={() => setHover(star)}
-                      onMouseLeave={() => setHover(0)}
-                    >
-                      {star <= (hover || rating) ? (
-                        <FaStar
-                          style={{
-                            fontSize: "2rem",
-                            color: "#ffc107",
-                            filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.2))",
-                          }}
-                        />
-                      ) : (
-                        <FaRegStar
-                          style={{
-                            fontSize: "2rem",
-                            color: "#dee2e6",
-                            filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.1))",
-                          }}
-                        />
-                      )}
-                    </button>
-                  ))}
-                </div>
-                <button
-                  onClick={submitRating}
-                  className="btn text-white"
-                  style={{
-                    backgroundColor: "#214D97",
-                    padding: "8px 25px",
-                    borderRadius: "4px",
-                    fontWeight: "500",
-                    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-                    opacity: rating ? 1 : 0.6,
-                    cursor: rating ? "pointer" : "not-allowed",
-                  }}
-                  disabled={!rating}
-                >
-                  إرسال التقييم
-                </button>
-              </div>
             </div>
 
             <div className="col-md-7 d-flex align-items-center justify-content-center py-4">
@@ -164,8 +76,8 @@ function VolunteerDetails() {
                       border: "1px solid rgba(167, 167, 167, 1)",
                     }}
                   />
-                  <label className="col-3" htmlFor="name">
-                    &nbsp;:اسم المتطوع
+                  <label className="col-3 text-end" htmlFor="name">
+                    :اسم المتطوع
                   </label>
                 </div>
 
@@ -182,8 +94,8 @@ function VolunteerDetails() {
                       border: "1px solid rgba(167, 167, 167, 1)",
                     }}
                   />
-                  <label className="col-3" htmlFor="email">
-                    &nbsp;:البريد الإلكترونى{" "}
+                  <label className="col-3 text-end" htmlFor="email">
+                    :البريد الإلكترونى{" "}
                   </label>
                 </div>
                 <div className="pb-2">
@@ -199,8 +111,8 @@ function VolunteerDetails() {
                       border: "1px solid rgba(167, 167, 167, 1)",
                     }}
                   />
-                  <label className="col-3" htmlFor="phoneNumber">
-                    &nbsp;:رقم الهاتف
+                  <label className="col-3 text-end" htmlFor="phoneNumber">
+                    :رقم الهاتف
                   </label>
                 </div>
                 <div className="pb-2">
@@ -216,8 +128,8 @@ function VolunteerDetails() {
                       border: "1px solid rgba(167, 167, 167, 1)",
                     }}
                   />
-                  <label className="col-3" htmlFor="city">
-                    &nbsp;:المدينه
+                  <label className="col-3 text-end" htmlFor="city">
+                    :المدينه
                   </label>
                 </div>
                 <div className="pb-2">
@@ -233,8 +145,8 @@ function VolunteerDetails() {
                       border: "1px solid rgba(167, 167, 167, 1)",
                     }}
                   />
-                  <label className="col-3" htmlFor="age">
-                    &nbsp;:السن
+                  <label className="col-3 text-end" htmlFor="age">
+                    :السن
                   </label>
                 </div>
                 <div className="pb-2">
@@ -250,9 +162,8 @@ function VolunteerDetails() {
                       border: "1px solid rgba(167, 167, 167, 1)",
                     }}
                   />
-                  <label className="col-3" htmlFor="dateOfBirth">
-                    {" "}
-                    &nbsp;:تاريخ الميلاد
+                  <label className="col-3 text-end" htmlFor="dateOfBirth">
+                    :تاريخ الميلاد
                   </label>
                 </div>
                 <div className="pb-2">
@@ -268,8 +179,8 @@ function VolunteerDetails() {
                       border: "1px solid rgba(167, 167, 167, 1)",
                     }}
                   />
-                  <label className="col-3" htmlFor="gender">
-                    &nbsp;:النوع
+                  <label className="col-3 text-end" htmlFor="gender">
+                    :النوع
                   </label>
                 </div>
                 <div className="pb-2">
@@ -285,8 +196,11 @@ function VolunteerDetails() {
                       border: "1px solid rgba(167, 167, 167, 1)",
                     }}
                   />
-                  <label className="col-3" htmlFor="hoursForDailyTasks">
-                    &nbsp;:ساعات المهام اليومية
+                  <label
+                    className="col-3 text-end"
+                    htmlFor="hoursForDailyTasks"
+                  >
+                    :ساعات المهام اليومية
                   </label>
                 </div>
                 <div className="pb-2">
@@ -302,8 +216,11 @@ function VolunteerDetails() {
                       border: "1px solid rgba(167, 167, 167, 1)",
                     }}
                   />
-                  <label className="col-3" htmlFor="totalVolunteerHours">
-                    &nbsp;:إجمالي ساعات التطوع
+                  <label
+                    className="col-3 text-end"
+                    htmlFor="totalVolunteerHours"
+                  >
+                    :إجمالي ساعات التطوع
                   </label>
                 </div>
 

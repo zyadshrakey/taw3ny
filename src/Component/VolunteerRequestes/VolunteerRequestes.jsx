@@ -7,11 +7,18 @@ import {
   rejectApplication,
 } from "../../Apis/requestes";
 import Loader from "../Loader/Loader";
-import { message } from "antd";
+import { message, Modal } from "antd";
+import { Link } from "react-router-dom";
 
 function VolunteerRequests() {
   const [requestsData, setRequestsData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [modalImage, setModalImage] = useState(null);
+  const [modalAlt, setModalAlt] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleClose = () => setIsOpen(false);
+  const handleOpen = () => setIsOpen(true);
 
   useEffect(() => {
     Interceptor();
@@ -46,38 +53,72 @@ function VolunteerRequests() {
       className="container py-4"
       dir="rtl"
       style={{
-        maxHeight: "90vh",
         overflowY: "auto",
         display: "flex",
         flexDirection: "column",
       }}
     >
-      <h2 className="fw-bold mb-4">طلبات التطوع</h2>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1>طلبات التطوع</h1>
+        </div>
+        <div>
+          <Link
+            to={"/approvedopportunity"}
+            className="p-3 shadow"
+            style={{
+              backgroundColor: "#214D97",
+              color: "#fff",
+              border: "none",
+              borderRadius: "12px",
+              fontWeight: "bold",
+              fontSize: "1.1rem",
+              boxShadow: "0 4px 16px rgba(33,77,151,0.08)",
+              transition: "all 0.3s",
+              textDecoration: "none",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#fff";
+              e.currentTarget.style.color = "#214D97";
+              e.currentTarget.style.border = "2px solid #214D97";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "#214D97";
+              e.currentTarget.style.color = "#fff";
+              e.currentTarget.style.border = "none";
+            }}
+          >
+            الطلبات المقبوله&nbsp;
+            <i class="fa-solid fa-check-double"></i>
+          </Link>
+        </div>
+      </div>
 
       {loading ? (
         <div className="d-flex justify-content-center align-items-center flex-grow-1">
           <Loader />
         </div>
       ) : requestsData.length > 0 ? (
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3 justify-content-start">
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
           {requestsData.map((request) => (
             <div
               key={request.id}
               className="col"
               style={{
-                transition: "transform 0.5s ease, box-shadow 0.5s ease",
+                // Use cubic-bezier for a smoother transition
+                transition:
+                  "transform 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.35s cubic-bezier(0.4,0,0.2,1)",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.firstChild.style.transform =
-                  "translateY(-5px) scale(1.02)";
+                  "translateY(-6px) scale(1.03)";
                 e.currentTarget.firstChild.style.boxShadow =
-                  "0 6px 20px rgba(0, 0, 0, 0.1)";
+                  "0 8px 32px rgba(33,77,151,0.10)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.firstChild.style.transform =
-                  "translateY(0) scale(1)";
+                e.currentTarget.firstChild.style.transform = "none";
                 e.currentTarget.firstChild.style.boxShadow =
-                  "0 0 8px rgba(0, 0, 0, 0.05)";
+                  "0 2px 8px rgba(33,77,151,0.05)";
               }}
             >
               <div className="card shadow border-0 rounded-3 overflow-hidden h-100">

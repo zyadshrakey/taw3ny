@@ -8,8 +8,14 @@ import {
   Button,
   Select,
   Pagination,
+  Tooltip,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import {
+  UploadOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  PlusSquareOutlined,
+} from "@ant-design/icons";
 import {
   getOpportunities,
   createOpportunity,
@@ -18,6 +24,7 @@ import {
 } from "../../Apis/opportunities";
 import avatar from "../../assets/volunteer-services-bureau logo@2x.png";
 import { Interceptor } from "../../Apis/interceptor";
+import Loader from "../Loader/Loader";
 
 const VolunteerOpportunities = () => {
   const [allOpportunities, setAllOpportunities] = useState([]); // لتخزين جميع الفرص
@@ -131,123 +138,183 @@ const VolunteerOpportunities = () => {
   return (
     <>
       <div
-        className="d-flex m-auto mt-2 align-items-center justify-content-between"
+        className="d-flex m-auto align-items-center justify-content-between py-3"
         style={{ width: "90%" }}
       >
         <button
-          className="p-3"
+          className="p-3 shadow"
           style={{
             backgroundColor: "#214D97",
-            color: "#F5F5F5",
-            border: "2px solid #214D97",
-            borderRadius: "8px",
-            transition: "all 0.3s ease",
+            color: "#fff",
+            border: "none",
+            borderRadius: "12px",
+            fontWeight: "bold",
+            fontSize: "1.1rem",
+            boxShadow: "0 4px 16px rgba(33,77,151,0.08)",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#FFFFFF";
+            e.currentTarget.style.backgroundColor = "#fff";
             e.currentTarget.style.color = "#214D97";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.backgroundColor = "#214D97";
-            e.currentTarget.style.color = "#F5F5F5";
+            e.currentTarget.style.color = "#fff";
           }}
           onClick={() => openModal()}
         >
-          إضافة فرصة <i className="fa-regular fa-square-plus"></i>
+          <PlusSquareOutlined style={{ fontSize: "1.3rem", marginLeft: 8 }} />
+          &nbsp; إضافة فرصة
         </button>
-
-        <h2 className="text-2xl font-bold">فرص التطوع</h2>
+        <h1>فرص التطوع</h1>
       </div>
 
-      <div className="container mx-auto" dir="rtl">
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-2 gx-4">
-          {opportunities.map((opportunity) => (
-            <div
-              key={opportunity.id}
-              className="col"
-              style={{
-                transition: "transform 0.5s ease, box-shadow 0.5s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.firstChild.style.transform =
-                  "translateY(-5px) scale(1.02)";
-                e.currentTarget.firstChild.style.boxShadow =
-                  "0 6px 20px rgba(0, 0, 0, 0.1)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.firstChild.style.transform =
-                  "translateY(0) scale(1)";
-                e.currentTarget.firstChild.style.boxShadow =
-                  "0 0 8px rgba(0, 0, 0, 0.05)";
-              }}
-            >
-              <div className="card mt-3 shadow border-0 rounded-3 overflow-hidden h-100">
+      <div className="container mx-auto " dir="rtl">
+        {loading ? (
+          <div className="d-flex justify-content-center align-items-center py-5">
+            <Loader />
+          </div>
+        ) : opportunities.length === 0 ? (
+          <div className="text-center py-5 text-muted">
+            <img
+              src={avatar}
+              alt="no opportunities"
+              style={{ width: 120, opacity: 0.3 }}
+            />
+            <div className="mt-3">لا توجد فرص متاحة حالياً</div>
+          </div>
+        ) : (
+          <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            {opportunities.map((opportunity) => (
+              <div
+                key={opportunity.id}
+                className="col"
+                style={{
+                  transition:
+                    "transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s cubic-bezier(0.4,0,0.2,1)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.firstChild.style.transform =
+                    "translateY(-8px) scale(1.025)";
+                  e.currentTarget.firstChild.style.boxShadow =
+                    "0 12px 32px rgba(33,77,151,0.13)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.firstChild.style.transform = "none";
+                  e.currentTarget.firstChild.style.boxShadow =
+                    "0 2px 8px rgba(33,77,151,0.05)";
+                }}
+              >
                 <div
-                  className="card-img-top"
-                  style={{ height: "120px", overflow: "hidden" }}
+                  className="card shadow border-0 rounded-4 overflow-hidden"
+                  style={{
+                    transition:
+                      "transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s cubic-bezier(0.4,0,0.2,1)",
+                  }}
                 >
-                  <img
-                    src={opportunity.pictureUrl || avatar}
-                    alt={opportunity.title}
-                    className="w-100 h-100 object-fit-cover"
-                  />
-                </div>
-
-                <div className="d-flex flex-column p-2">
-                  <h5 className="card-title mb-1 text-truncate fw-bold">
-                    {opportunity.title}
-                  </h5>
-
-                  <p className="card-text mb-1 text-truncate">
-                    {opportunity.description || "لا يوجد وصف متاح"}
-                  </p>
-
-                  <div className="d-flex flex-column justify-content-between text-dark mb-3 small">
-                    <span>{opportunity.location}</span>
-                    <span>{opportunity.category}</span>
-                    <span>{opportunity.maxVolunteers} متطوع</span>
+                  <div
+                    className="card-img-top position-relative"
+                    style={{
+                      height: "140px",
+                      overflow: "hidden",
+                      background: "#f6f8fa",
+                    }}
+                  >
+                    <img
+                      src={opportunity.pictureUrl || avatar}
+                      alt={opportunity.title}
+                      className="w-100 h-100 object-fit-cover"
+                      style={{
+                        borderTopLeftRadius: "1rem",
+                        borderTopRightRadius: "1rem",
+                      }}
+                    />
+                    <span
+                      className="position-absolute px-3 py-1"
+                      style={{
+                        left: 0,
+                        top: 0,
+                        background: "rgba(33,77,151,0.85)",
+                        color: "#fff",
+                        borderBottomRightRadius: "1rem",
+                        fontWeight: "bold",
+                        fontSize: "1rem",
+                      }}
+                    >
+                      {opportunity.title}
+                    </span>
                   </div>
-
-                  <div className="d-flex gap-2 mt-auto">
-                    <button
-                      className="btn py-1 px-2"
-                      style={{
-                        backgroundColor: "#214D97",
-                        fontSize: "0.9rem",
-                        flex: 1,
-                        color: "#F5F5F5",
-                        border: "2px solid #214D97",
-                        borderRadius: "8px",
-                        transition: "all 0.3s ease",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "#FFFFFF";
-                        e.currentTarget.style.color = "#214D97";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = "#214D97";
-                        e.currentTarget.style.color = "#F5F5F5";
-                      }}
-                      onClick={() => openModal(opportunity)}
+                  <div className="d-flex flex-column p-3">
+                    <div
+                      className="mb-2 text-truncate"
+                      style={{ color: "#22223b", fontWeight: 500 }}
                     >
-                      تعديل
-                    </button>
-                    <button
-                      className="btn btn-outline-danger py-1 px-2"
-                      style={{
-                        fontSize: "0.9rem",
-                        flex: 1,
-                      }}
-                      onClick={() => handleDelete(opportunity.id)}
-                    >
-                      حذف
-                    </button>
+                      {opportunity.description || "لا يوجد وصف متاح"}
+                    </div>
+                    <div className="d-flex flex-wrap gap-2 mb-2 small text-secondary">
+                      <span>
+                        <i className="fa-solid fa-location-dot ms-1"></i>
+                        {opportunity.location}
+                      </span>
+                      <span>
+                        <i className="fa-solid fa-layer-group ms-1"></i>
+                        {opportunity.category}
+                      </span>
+                      <span>
+                        <i className="fa-solid fa-users ms-1"></i>
+                        {opportunity.maxVolunteers} متطوع
+                      </span>
+                    </div>
+                    <div className="d-flex flex-wrap gap-2 mb-2 small text-secondary">
+                      <span>
+                        <i className="fa-solid fa-calendar-days ms-1"></i>
+                        {opportunity.startDate} - {opportunity.endDate}
+                      </span>
+                      <span>
+                        <i className="fa-solid fa-clock ms-1"></i>
+                        {opportunity.totalHours} ساعة
+                      </span>
+                    </div>
+                    <div className="d-flex gap-2 mt-auto justify-content-end">
+                      <Tooltip title="تعديل">
+                        <Button
+                          icon={<EditOutlined />}
+                          style={{
+                            background: "#f3f4f6",
+                            color: "#214D97",
+                            border: "none",
+                            borderRadius: "8px",
+                            fontWeight: "bold",
+                            transition: "background 0.2s, color 0.2s",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = "#214D97";
+                            e.currentTarget.style.color = "#fff";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "#f3f4f6";
+                            e.currentTarget.style.color = "#214D97";
+                          }}
+                          onClick={() => openModal(opportunity)}
+                        />
+                      </Tooltip>
+                      <Tooltip title="حذف">
+                        <Button
+                          icon={<DeleteOutlined />}
+                          danger
+                          style={{
+                            borderRadius: "8px",
+                            fontWeight: "bold",
+                          }}
+                          onClick={() => handleDelete(opportunity.id)}
+                        />
+                      </Tooltip>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         <div className="d-flex justify-content-center mt-4">
           <Pagination
@@ -255,9 +322,6 @@ const VolunteerOpportunities = () => {
             pageSize={pageSize}
             total={totalCount}
             onChange={handlePageChange}
-            // showSizeChanger
-            // pageSizeOptions={["8", "16", "24"]}
-            // showTotal={(total) => `العدد الإجمالي: ${total}`}
           />
         </div>
       </div>
@@ -271,111 +335,122 @@ const VolunteerOpportunities = () => {
         cancelText="إغلاق"
       >
         <Form form={form} layout="vertical" onFinish={handleSave}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Form.Item
-              name="title"
-              label="اسم الفرصة"
-              rules={[{ required: true, message: "الرجاء إدخال اسم الفرصة" }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              name="category"
-              label="الفئة"
-              rules={[{ required: true, message: "الرجاء اختيار الفئة" }]}
-            >
-              <Select placeholder="اختر الفئة">
-                {[
-                  "Education",
-                  "Health",
-                  "Relief",
-                  "Environment",
-                  "CommunityDevelopment",
-                  "ArtsAndCulture",
-                ].map((cat) => (
-                  <Select.Option key={cat} value={cat}>
-                    {cat}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            <Form.Item
-              name="location"
-              label="الموقع"
-              rules={[{ required: true, message: "الرجاء إدخال الموقع" }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              name="Requirements"
-              label="المتطلبات"
-              rules={[{ required: true, message: "الرجاء إدخال المتطلبات" }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              name="startDate"
-              label="تاريخ البداية"
-              rules={[
-                { required: true, message: "الرجاء إدخال تاريخ البداية" },
-              ]}
-            >
-              <Input type="date" />
-            </Form.Item>
-
-            <Form.Item
-              name="endDate"
-              label="تاريخ النهاية"
-              rules={[
-                { required: true, message: "الرجاء إدخال تاريخ النهاية" },
-              ]}
-            >
-              <Input type="date" />
-            </Form.Item>
-
-            <Form.Item
-              name="totalHours"
-              label="عدد الساعات المطلوبة"
-              rules={[{ required: true, message: "الرجاء إدخال العدد" }]}
-            >
-              <Input type="number" />
-            </Form.Item>
-
-            <Form.Item
-              name="maxVolunteers"
-              label="عدد المتطوعين المطلوب"
-              rules={[{ required: true, message: "الرجاء إدخال العدد" }]}
-            >
-              <Input type="number" />
-            </Form.Item>
-
-            <Form.Item name="description" label="الوصف">
-              <Input.TextArea />
-            </Form.Item>
-
-            <Form.Item label="الصورة">
-              <Upload
-                beforeUpload={(file) => {
-                  setImageFile(file);
-                  setPreviewUrl(URL.createObjectURL(file));
-                  return false;
-                }}
-                showUploadList={false}
+          <div className="row g-3">
+            <div className="col-md-6">
+              <Form.Item
+                name="title"
+                label="اسم الفرصة"
+                rules={[{ required: true, message: "الرجاء إدخال اسم الفرصة" }]}
               >
-                <Button icon={<UploadOutlined />}>تحميل صورة</Button>
-              </Upload>
-              {previewUrl && (
-                <img
-                  src={previewUrl}
-                  alt="preview"
-                  style={{ width: "100px", marginTop: "10px" }}
-                />
-              )}
-            </Form.Item>
+                <Input />
+              </Form.Item>
+            </div>
+            <div className="col-md-6">
+              <Form.Item
+                name="category"
+                label="الفئة"
+                rules={[{ required: true, message: "الرجاء اختيار الفئة" }]}
+              >
+                <Select placeholder="اختر الفئة">
+                  {[
+                    "Education",
+                    "Health",
+                    "Relief",
+                    "Environment",
+                    "CommunityDevelopment",
+                    "ArtsAndCulture",
+                  ].map((cat) => (
+                    <Select.Option key={cat} value={cat}>
+                      {cat}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </div>
+            <div className="col-md-6">
+              <Form.Item
+                name="location"
+                label="الموقع"
+                rules={[{ required: true, message: "الرجاء إدخال الموقع" }]}
+              >
+                <Input />
+              </Form.Item>
+            </div>
+            <div className="col-md-6">
+              <Form.Item
+                name="Requirements"
+                label="المتطلبات"
+                rules={[{ required: true, message: "الرجاء إدخال المتطلبات" }]}
+              >
+                <Input />
+              </Form.Item>
+            </div>
+            <div className="col-md-6">
+              <Form.Item
+                name="startDate"
+                label="تاريخ البداية"
+                rules={[
+                  { required: true, message: "الرجاء إدخال تاريخ البداية" },
+                ]}
+              >
+                <Input type="date" />
+              </Form.Item>
+            </div>
+            <div className="col-md-6">
+              <Form.Item
+                name="endDate"
+                label="تاريخ النهاية"
+                rules={[
+                  { required: true, message: "الرجاء إدخال تاريخ النهاية" },
+                ]}
+              >
+                <Input type="date" />
+              </Form.Item>
+            </div>
+            <div className="col-md-6">
+              <Form.Item
+                name="totalHours"
+                label="عدد الساعات المطلوبة"
+                rules={[{ required: true, message: "الرجاء إدخال العدد" }]}
+              >
+                <Input type="number" />
+              </Form.Item>
+            </div>
+            <div className="col-md-6">
+              <Form.Item
+                name="maxVolunteers"
+                label="عدد المتطوعين المطلوب"
+                rules={[{ required: true, message: "الرجاء إدخال العدد" }]}
+              >
+                <Input type="number" />
+              </Form.Item>
+            </div>
+            <div className="col-12">
+              <Form.Item name="description" label="الوصف">
+                <Input.TextArea />
+              </Form.Item>
+            </div>
+            <div className="col-12">
+              <Form.Item label="الصورة">
+                <Upload
+                  beforeUpload={(file) => {
+                    setImageFile(file);
+                    setPreviewUrl(URL.createObjectURL(file));
+                    return false;
+                  }}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>تحميل صورة</Button>
+                </Upload>
+                {previewUrl && (
+                  <img
+                    src={previewUrl}
+                    alt="preview"
+                    style={{ width: "100px", marginTop: "10px" }}
+                  />
+                )}
+              </Form.Item>
+            </div>
           </div>
         </Form>
       </Modal>

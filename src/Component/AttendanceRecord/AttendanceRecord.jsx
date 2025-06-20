@@ -14,7 +14,7 @@ function AttendanceRecord() {
   const navigate = useNavigate();
   let [attentance, setAttentance] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [qrLoading, setIsQrLoading] = useState(true);
+  const [qrLoading, setIsQrLoading] = useState(false);
   let [error, setError] = useState(null);
   let [searchItem, setSearchItem] = useState("");
   let token = localStorage.getItem("userToken");
@@ -145,8 +145,8 @@ function AttendanceRecord() {
                 fontSize: "1rem",
                 transition: "background 0.2s",
               }}
-              onClick={generatQr}
               disabled={qrLoading}
+              onClick={generatQr}
             >
               إنشاء رمز الاستجابة السريعة
             </button>

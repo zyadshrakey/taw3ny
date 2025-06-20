@@ -108,10 +108,9 @@ function VolunteerRequests() {
                 // Use cubic-bezier for a smoother transition
                 transition:
                   "transform 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.35s cubic-bezier(0.4,0,0.2,1)",
+                  
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.firstChild.style.transition=
-                "all 0.3s ease"
                 e.currentTarget.firstChild.style.transform =
                   "translateY(-6px) scale(1.03)";
                 e.currentTarget.firstChild.style.boxShadow =
@@ -129,7 +128,7 @@ function VolunteerRequests() {
                   style={{ height: "120px", overflow: "hidden" }}
                 >
                   <img
-                    src={request.pictureUrl || avatar}
+                    src={request?.pictureUrl || avatar}
                     alt={request.volunteerName}
                     className="w-100 h-100 object-fit-cover"
                   />

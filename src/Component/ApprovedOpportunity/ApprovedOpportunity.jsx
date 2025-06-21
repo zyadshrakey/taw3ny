@@ -5,6 +5,7 @@ import { message, Modal , Pagination} from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { FaQrcode, FaArrowLeft, FaSearch, FaTimes } from "react-icons/fa";
 import axios from "axios";
+import avatar2 from "../../assets/avatar2.jpg"
 // import { useFormik } from "formik";
 // import toast from "react-hot-toast";
 
@@ -194,9 +195,17 @@ function ApprovedOpportunity() {
                   className="card-body p-2 d-flex flex-column"
                   style={{ height: "calc(100% - 150px)" }}
                 >
-                  <h5 className="card-title fw-bold mb-1 text-truncate">
-                    {request.volunteerName}
-                  </h5>
+                  <div className="d-flex flex-row gap-2 align-content-center">
+                    <div>
+                      <img src={request.volunteerPictureUrl || avatar2} alt={request.volunteerName} className="rounded-circle border" style={{ width: 45, height: 45, objectFit: "cover", background: "#fff", boxShadow: "0 2px 8px rgba(33,77,151,0.13)" }} />
+                    </div>
+                    <div>
+                      <h5 className="card-title fw-bold mb-1 text-truncate">
+                        {request.volunteerName}
+                      </h5>
+                    </div>
+                  </div>
+                  
                   <p className="card-text text-muted small mb-1">
                     {request.volunteerEmail}
                   </p>
@@ -211,7 +220,7 @@ function ApprovedOpportunity() {
                   </p>
 
                   <div className="d-flex gap-2 mt-auto w-100">
-                    {request.rate ? (
+                    {request.rating ? (
                       <div
                         className="w-100 text-center py-2"
                         style={{
@@ -223,7 +232,7 @@ function ApprovedOpportunity() {
                           border: "2px solid #214D97",
                         }}
                       >
-                        التقييم: {request.rate} / 5
+                        التقييم: {request.rating} / 5
                       </div>
                     ) : (
                       <button

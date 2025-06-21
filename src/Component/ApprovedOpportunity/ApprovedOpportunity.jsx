@@ -199,7 +199,7 @@ function ApprovedOpportunity() {
                     <div>
                       <img src={request.volunteerPictureUrl || avatar2} alt={request.volunteerName} className="rounded-circle border" style={{ width: 45, height: 45, objectFit: "cover", background: "#fff", boxShadow: "0 2px 8px rgba(33,77,151,0.13)" }} />
                     </div>
-                    <div>
+                    <div className="flex align-content-center">
                       <h5 className="card-title fw-bold mb-1 text-truncate">
                         {request.volunteerName}
                       </h5>

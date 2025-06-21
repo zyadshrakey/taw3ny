@@ -246,11 +246,12 @@ function VolunteerDetails() {
 
                 <div>
                   <button
+                    type="button"
                     className="btn btn-outline-danger fw-bold px-3 rounded-2 "
                     style={{ borderRadius: "2px" }}
                     onClick={deleteVolunteer}
                   >
-                    <i class="fa-solid fa-trash-can"></i>
+                    <i className="fa-solid fa-trash-can"></i>
                     <span className="px-2">حذف المتطوع</span>
                   </button>
                 </div>

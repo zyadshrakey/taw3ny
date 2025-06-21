@@ -7,7 +7,7 @@ import { message } from "antd";
 function VolunteerDetails() {
   const navigate = useNavigate();
   const handleGoBack = () => {
-    navigate(-1);
+    navigate("/Volunteer");
   };
 
   let { id } = useParams();
@@ -39,7 +39,7 @@ function VolunteerDetails() {
       );
       if (response.status === 200) {
         message.success("تم حذف المتطوع بنجاح!");
-        window.history.back();
+        navigate("/Volunteer");
       } else {
         throw new Error("Failed to delete volunteer");
       }

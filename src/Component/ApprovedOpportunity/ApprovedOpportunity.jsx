@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import avatar from "../../assets/volunteer-services-bureau logo@2x.png";
 import Loader from "../Loader/Loader";
-import { message, Modal , Pagination} from "antd";
+import { message, Modal, Pagination } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { FaQrcode, FaArrowLeft, FaSearch, FaTimes } from "react-icons/fa";
 import axios from "axios";
-import avatar2 from "../../assets/avatar2.jpg"
+import avatar2 from "../../assets/avatar2.jpg";
 // import { useFormik } from "formik";
 // import toast from "react-hot-toast";
 
@@ -21,7 +21,7 @@ function ApprovedOpportunity() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(8); // or any default
   const [totalCount, setTotalCount] = useState(0);
-  const userToken = localStorage.getItem('userToken')
+  const userToken = localStorage.getItem("userToken");
   const navigate = useNavigate();
   const handleGoBack = () => {
     navigate(-1);
@@ -65,7 +65,6 @@ function ApprovedOpportunity() {
         }
       );
       console.log(response);
-      
 
       // Update the rated request in approvedData
       setApprovedData((prev) =>
@@ -146,18 +145,18 @@ function ApprovedOpportunity() {
               className="col"
               style={{
                 transition:
-                    "transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s cubic-bezier(0.4,0,0.2,1)",
+                  "transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s cubic-bezier(0.4,0,0.2,1)",
               }}
               onMouseEnter={(e) => {
-                 e.currentTarget.firstChild.style.transform =
-                    "translateY(-8px) scale(1.025)";
-                  e.currentTarget.firstChild.style.boxShadow =
-                    "0 12px 32px rgba(33,77,151,0.13)";
+                e.currentTarget.firstChild.style.transform =
+                  "translateY(-8px) scale(1.025)";
+                e.currentTarget.firstChild.style.boxShadow =
+                  "0 12px 32px rgba(33,77,151,0.13)";
               }}
               onMouseLeave={(e) => {
-                  e.currentTarget.firstChild.style.transform = "none";
-                  e.currentTarget.firstChild.style.boxShadow =
-                    "0 2px 8px rgba(33,77,151,0.05)";
+                e.currentTarget.firstChild.style.transform = "none";
+                e.currentTarget.firstChild.style.boxShadow =
+                  "0 2px 8px rgba(33,77,151,0.05)";
               }}
             >
               <div className="card shadow border-0 rounded-3 overflow-hidden h-100">
@@ -178,7 +177,18 @@ function ApprovedOpportunity() {
                 >
                   <div className="d-flex flex-row gap-2 align-content-center">
                     <div>
-                      <img src={request.volunteerPictureUrl || avatar2} alt={request.volunteerName} className="rounded-circle border" style={{ width: 45, height: 45, objectFit: "cover", background: "#fff", boxShadow: "0 2px 8px rgba(33,77,151,0.13)" }} />
+                      <img
+                        src={request.volunteerPictureUrl || avatar2}
+                        alt={request.volunteerName}
+                        className="rounded-circle border"
+                        style={{
+                          width: 45,
+                          height: 45,
+                          objectFit: "cover",
+                          background: "#fff",
+                          boxShadow: "0 2px 8px rgba(33,77,151,0.13)",
+                        }}
+                      />
                     </div>
                     <div className="flex align-content-center">
                       <h5 className="card-title fw-bold mb-1 text-truncate">
@@ -186,7 +196,7 @@ function ApprovedOpportunity() {
                       </h5>
                     </div>
                   </div>
-                  
+
                   <p className="card-text text-muted small mb-1">
                     {request.volunteerEmail}
                   </p>
@@ -346,10 +356,8 @@ function ApprovedOpportunity() {
                   </div>
                 </div>
               </div>
-              
             </div>
           ))}
-          
         </div>
       ) : (
         <div className="alert alert-warning text-center flex-grow-1 d-flex align-items-center justify-content-center">

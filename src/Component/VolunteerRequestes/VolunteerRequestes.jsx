@@ -29,7 +29,9 @@ function VolunteerRequests() {
     setLoading(true);
     try {
       const { data } = await getCharityApplications();
-      setRequestsData(data.data || []);
+      setRequestsData(data || []);
+      console.log("Requests Data:", data);
+      
     } catch (error) {
       console.error("Error fetching requests:", error);
     } finally {

@@ -27,11 +27,11 @@ function ApprovedOpportunity() {
     navigate(-1);
   };
 
-  const approvedOpportunity = async (page = 1, size = 8) => {
+  const approvedOpportunity = async () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://wezaa.runasp.net/VolunteerApplications?status=Approved&PageIndex=${page}&PageSize=${size}`,
+        `https://wezaa.runasp.net/VolunteerApplications?status=Approved`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -39,10 +39,10 @@ function ApprovedOpportunity() {
           },
         }
       );
-      setApprovedData(response.data.data);
+      setApprovedData(response.data);
       setTotalCount(response.data.totalCount || response.data.total || 0); // adjust according to your API
 
-      console.log("Approved Opportunities:", response.data.data);
+      console.log("Approved Opportunities:", response.data);
     } catch (error) {
       console.error("Error fetching approved opportunities:", error);
     } finally {
@@ -50,14 +50,7 @@ function ApprovedOpportunity() {
     }
   };
 
-    useEffect(() => {
-      approvedOpportunity(currentPage, pageSize);
-    }, [currentPage, pageSize]);
 
-    const handlePageChange = (page, size) => {
-      setCurrentPage(page);
-      setPageSize(size);
-    };
 
   const handleApprove = async (id, rate) => {
     setLoading(true);
@@ -76,7 +69,7 @@ function ApprovedOpportunity() {
 
       // Update the rated request in approvedData
       setApprovedData((prev) =>
-        prev.map((item) => (item.id === id ? { ...item, rate } : item))
+        prev.map((item) => (item.id === id ? { ...item, rating: rate } : item))
       );
       setOpenApprove(false);
       setSelectedRequest(null);
@@ -89,22 +82,10 @@ function ApprovedOpportunity() {
     }
   };
 
-  // Save to localStorage whenever approvedData changes
   useEffect(() => {
-    if (approvedData.length > 0) {
-      localStorage.setItem("approvedData", JSON.stringify(approvedData));
-    }
-  }, [approvedData]);
-
-  // On mount, load from localStorage if available
-  useEffect(() => {
-    const local = localStorage.getItem("approvedData");
-    if (local) {
-      setApprovedData(JSON.parse(local));
-    } else {
       approvedOpportunity();
-    }
-  }, []);
+    }, []);
+
 
   return (
     <div
@@ -375,14 +356,6 @@ function ApprovedOpportunity() {
           لا توجد طلبات متاحة
         </div>
       )}
-      <Pagination
-        className="d-flex justify-content-center align-items-center py-3"
-        current={currentPage}
-        pageSize={pageSize}
-        total={totalCount}
-        onChange={handlePageChange}
-        showSizeChanger={false} // Hide the page size select box
-      />
     </div>
   );
 }
